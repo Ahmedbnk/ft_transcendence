@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>devhub — learning by building</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFAF7;--ink:#141412;--mut:#8B8B82;--line:#E5E5DE;--card:#FFF;--acc:#2E5BFF;--soft:#EEF1FF;--ok:#1E9E5A;--warn:#C77E0A;--bad:#D64545;--gold:#B8860B}
+html.dark{--bg:#0D0D0C;--ink:#F1F1EC;--mut:#87877F;--line:#252522;--card:#151513;--acc:#7B93FF;--soft:#181B2A;--gold:#E8B23D}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+button{font-family:inherit;cursor:pointer;font-size:inherit}
+a{color:inherit;text-decoration:none}
+.mono{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.03em}
+#hd{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:26px;padding:0 36px;height:60px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px)}
+.wm{font-weight:700;font-size:17px;letter-spacing:-.02em;cursor:pointer}
+.wm i{color:var(--acc);font-style:normal}
+#hd nav{display:flex;gap:4px}
+#hd nav a{padding:6px 12px;border-radius:8px;font-size:14px;color:var(--mut);cursor:pointer}
+#hd nav a:hover{color:var(--ink)}
+#hd nav a.on{color:var(--acc);font-weight:600;background:var(--soft)}
+.sp{flex:1}
+.ib{background:none;border:1px solid var(--line);border-radius:9px;width:35px;height:35px;display:inline-flex;align-items:center;justify-content:center;color:var(--mut);position:relative}
+.ib:hover{color:var(--ink);border-color:var(--ink)}
+.ib .n{position:absolute;top:-5px;right:-5px;background:var(--acc);color:#fff;font-size:9px;font-weight:700;min-width:15px;height:15px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono'}
+.av{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--bg);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0}
+#view{min-height:calc(100vh - 60px)}
+.split{display:flex}
+.side{width:212px;border-right:1px solid var(--line);padding:28px 14px;flex-shrink:0;display:flex;flex-direction:column;min-height:calc(100vh - 60px)}
+.side a{display:flex;gap:10px;align-items:center;padding:9px 13px;border-radius:8px;color:var(--mut);font-size:14px;cursor:pointer;margin-bottom:2px}
+.side a.on{background:var(--soft);color:var(--acc);font-weight:600}
+.side a:hover{color:var(--ink)}
+.side .grow{flex:1}
+.main{flex:1;padding:44px 48px;min-width:0}
+h1{font-size:29px;letter-spacing:-.03em;font-weight:700}
+h2{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);margin:34px 0 14px;font-weight:600}
+.lead{color:var(--mut);margin:6px 0 30px}
+.btn{border-radius:9px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);padding:9px 18px;font-size:13.5px;font-weight:600;transition:.15s;display:inline-flex;gap:8px;align-items:center}
+.btn:hover{opacity:.86}
+.btn.acc{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.gh{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.gh:hover{border-color:var(--ink);opacity:1}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.grid{display:grid;gap:14px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.pill{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:3px 10px;border-radius:99px;font-weight:500;display:inline-block}
+.pg{color:var(--ok);background:color-mix(in srgb,var(--ok) 13%,transparent)}
+.py{color:var(--warn);background:color-mix(in srgb,var(--warn) 13%,transparent)}
+.pr{color:var(--bad);background:color-mix(in srgb,var(--bad) 11%,transparent)}
+.pb{color:var(--acc);background:var(--soft)}
+.pn{color:var(--mut);background:color-mix(in srgb,var(--mut) 13%,transparent)}
+.pw{color:var(--gold);background:color-mix(in srgb,var(--gold) 15%,transparent)}
+.pa{color:#fff;background:linear-gradient(135deg,var(--acc),#8B5CF6)}
+.star{font-size:19px;color:var(--line);line-height:1}
+.star.on{color:var(--gold)}
+.starrow{display:flex;gap:3px}
+.xpbar{height:5px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:6px}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),#8B5CF6);border-radius:99px}
+.rank1{color:var(--gold);font-weight:700}
+.reviewrow{padding:14px 0;border-bottom:1px solid var(--line)}
+.reviewrow:last-child{border:none}
+.chip{font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 12px;border-radius:99px;border:1px solid var(--line);color:var(--mut);background:none}
+.chip.on{border-color:var(--acc);color:var(--acc);background:var(--soft)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 22px}
+input,select,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:10px 14px;font-size:14px;font-family:inherit;color:var(--ink)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--soft)}
+label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);display:block;margin:16px 0 7px}
+.tblw{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);text-align:left;font-weight:600;padding:11px 16px;border-bottom:1px solid var(--line)}
+td{padding:13px 16px;border-bottom:1px solid var(--line);font-size:14px}
+tr:last-child td{border:none}
+.act{color:var(--acc);font-weight:600;font-size:13px;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stat{background:var(--card);padding:20px 22px}
+.stat span{font-size:10.5px;color:var(--mut);font-family:'JetBrains Mono',monospace;letter-spacing:.07em}
+.stat b{font-size:30px;font-weight:700;letter-spacing:-.03em;display:block;margin:4px 0 2px}
+.avsm{width:24px;height:24px;border-radius:50%;background:var(--line);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;vertical-align:middle;margin-right:6px}
+.fade{animation:fd .3s ease}
+@keyframes fd{from{opacity:0;transform:translateY(5px)}}
+.empty{border:1px dashed var(--line);border-radius:12px;padding:36px;text-align:center;color:var(--mut)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--bg);padding:13px 18px;border-radius:10px;font-size:13.5px;display:flex;gap:10px;align-items:center;z-index:99;animation:tin .25s cubic-bezier(.2,.9,.3,1.15);max-width:360px;box-shadow:0 14px 40px rgba(0,0,0,.28)}
+.toast .d{width:8px;height:8px;border-radius:50%;background:var(--ok);flex-shrink:0}
+@keyframes tin{from{transform:translateY(14px);opacity:0}}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.42);backdrop-filter:blur(3px);display:flex;align-items:flex-start;justify-content:center;z-index:80;padding-top:12vh}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:14px;width:600px;max-width:92vw;max-height:80vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.3);padding:24px 26px}
+.authbox{max-width:390px;margin:11vh auto;padding:0 24px}
+.hero{max-width:920px;margin:0 auto;padding:96px 40px 72px}
+.hero h1{font-size:clamp(36px,5.6vw,60px);line-height:1.06;letter-spacing:-.04em}
+.hero h1 em{color:var(--acc);font-style:normal}
+.hero p{color:var(--mut);font-size:17.5px;margin:20px 0 32px;max-width:560px}
+.tick{display:flex;gap:22px;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mut);flex-wrap:wrap}
+.tick b{color:var(--ink)}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.feat>div{background:var(--bg);padding:38px 34px}
+.feat .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--acc)}
+.feat b{display:block;font-size:16.5px;margin:12px 0 6px}
+.feat p{color:var(--mut);font-size:14px}
+@media(max-width:840px){.side{display:none}.main{padding:24px 18px}.g3,.g2{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}#hd{padding:0 14px;gap:10px}#hd nav{display:none}.hero{padding:56px 22px 48px}.feat{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header id="hd">
+  <div class="wm" onclick="go('landing')">dev<i>/</i>hub</div>
+  <nav id="nav"></nav>
+  <div class="sp"></div>
+  <button class="ib" onclick="toggleTheme()">◐</button>
+  <span id="hdRight"></span>
+</header>
+<div id="view"></div>
+
+<script>
+"use strict";
+/* ══════════ STORE ══════════ */
+var DB_KEY='devhub_v3';
+function freshDb(){
+  return {
+    session:null,
+    nextId:100,
+    users:[
+      {id:1,name:'Karim Senior',email:'senior@dev.io',pw:'demo1234',role:'senior',xp:340,linkedin:'linkedin.com/in/karim-senior',seniorReq:null},
+      {id:2,name:'Sara Junior',email:'junior@dev.io',pw:'demo1234',role:'junior',xp:150,linkedin:'',seniorReq:null},
+      {id:3,name:'Omar K.',email:'omar@dev.io',pw:'demo1234',role:'junior',xp:40,linkedin:'linkedin.com/in/omar-k',seniorReq:{status:'pending',linkedin:'linkedin.com/in/omar-k',ago:'1D AGO'}},
+      {id:4,name:'Admin',email:'admin@dev.io',pw:'demo1234',role:'admin',xp:0,linkedin:'',seniorReq:null}
+    ],
+    projects:[
+      {id:'P-01',senior:1,title:'E-commerce REST API',desc:'A complete store backend: products, cart, orders.',reqs:'- Java · Spring Boot · JPA\n- JWT auth\n- DTO validation\n- Unit tests on services\n- Clean commit history',slots:3,discord:'discord.gg/storeproj'},
+      {id:'P-02',senior:1,title:'Realtime Chat Frontend',desc:'Chat UI with rooms and presence, JS only.',reqs:'- JavaScript · WebSocket\n- Vanilla JS or React (justify choice)\n- Reconnect handling\n- Clean, readable code',slots:2,discord:'discord.gg/chatproj'}
+    ],
+    subs:[
+      {id:1,project:'P-01',junior:2,repo:'https://github.com/sara-dev/ecommerce-api',status:'submitted',feedback:'',ago:'2H AGO',rated:false},
+      {id:2,project:'P-01',junior:3,repo:'',status:'working',feedback:'',ago:'1D AGO',rated:false},
+      {id:3,project:'P-02',junior:2,repo:'https://github.com/sara-dev/chat-frontend',status:'approved',feedback:'Solid reconnect logic and clean event handling. Watch for a small memory leak on unmount — otherwise great work.',ago:'3D AGO',rated:true}
+    ],
+    seniorReviews:[
+      {id:1,senior:1,junior:2,project:'P-02',sub:3,stars:5,comment:'Clear, thorough feedback — explained exactly what to fix and why. Learned a lot.',ago:'3D AGO'}
+    ],
+    notifs:[
+      {id:1,user:1,txt:'Sara Junior submitted a repo for "E-commerce REST API"',kind:'acc',ago:'2H'}
+    ]
+  };
+}
+var db;
+try{ db=JSON.parse(localStorage.getItem(DB_KEY)); }catch(e){ db=null; }
+if(!db || !db.users){ db=freshDb(); }
+if(!db.users.some(function(u){return u.role==='admin'})){
+  db.users.push({id:db.nextId++,name:'Admin',email:'admin@dev.io',pw:'demo1234',role:'admin',xp:0,linkedin:'',seniorReq:null});
+}
+if(!db.seniorReviews)db.seniorReviews=[];
+db.users.forEach(function(u){ if(u.xp==null)u.xp=0; if(u.linkedin==null)u.linkedin=''; if(u.seniorReq===undefined)u.seniorReq=null; });
+db.subs.forEach(function(s){ if(s.rated==null)s.rated=false; });
+function save(){ localStorage.setItem(DB_KEY,JSON.stringify(db)); }
+save();
+function resetDemo(){ localStorage.removeItem(DB_KEY); location.reload(); }
+
+/* helpers */
+function me(){ return db.users.find(function(u){return u.id===db.session})||null; }
+function uname(id){ var u=db.users.find(function(u){return u.id===id}); return u?u.name:'—'; }
+function proj(id){ return db.projects.find(function(p){return p.id===id}); }
+function subsOf(pid){ return db.subs.filter(function(s){return s.project===pid}); }
+function $(sel){ return document.querySelector(sel); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]}); }
+function toast(m){
+  var t=document.createElement('div');t.className='toast';
+  t.innerHTML='<span class="d"></span><span>'+esc(m)+'</span>';
+  document.body.appendChild(t);
+  setTimeout(function(){t.style.opacity='0';t.style.transition='.4s';},2500);
+  setTimeout(function(){t.remove();},3000);
+}
+function toggleTheme(){ document.documentElement.classList.toggle('dark'); }
+function notify(uid,txt,kind){
+  db.notifs.push({id:db.nextId++,user:uid,txt:txt,kind:kind||'acc',ago:'NOW'});
+}
+function myNotifs(){ var u=me(); return u?db.notifs.filter(function(n){return n.user===u.id}):[]; }
+function xpOf(u){ return u&&u.xp?u.xp:0; }
+function seniorRating(uid){
+  var r=db.seniorReviews.filter(function(x){return x.senior===uid});
+  if(!r.length)return {avg:0,count:0};
+  var sum=r.reduce(function(a,x){return a+x.stars},0);
+  return {avg:sum/r.length,count:r.length};
+}
+function starsRow(n,interactive){
+  var s='<span class="starrow" id="starpick">';
+  for(var i=1;i<=5;i++){
+    s+='<span class="star'+(i<=n?' on':'')+'"'+(interactive?' onclick="pickStar('+i+')" style="cursor:pointer"':'')+'>'+(i<=n?'★':'☆')+'</span>';
+  }
+  return s+'</span>';
+}
+function ratingBadge(uid){
+  var r=seniorRating(uid);
+  if(!r.count)return '<span class="pill pn">No reviews yet</span>';
+  return '<span class="pill pw">★ '+r.avg.toFixed(1)+' · '+r.count+' review'+(r.count>1?'s':'')+'</span>';
+}
+function pendingSeniorReqs(){
+  return db.users.filter(function(u){return u.seniorReq&&u.seniorReq.status==='pending'});
+}
+
+/* ══════════ ROUTER ══════════ */
+var route='landing';
+function go(r){ route=r; render(); window.scrollTo(0,0); }
+function render(){
+  var u=me(),nav=$('#nav');
+  if(!u){
+    nav.innerHTML='<a class="'+(route==='landing'?'on':'')+'" onclick="go(\'landing\')">Home</a>'
+      +'<a class="'+(route==='projects'?'on':'')+'" onclick="go(\'projects\')">Projects</a>';
+    $('#hdRight').innerHTML='<button class="btn gh sm" onclick="go(\'login\')">Sign in</button> <button class="btn sm" onclick="go(\'register\')">Sign up</button>';
+  }else if(u.role==='admin'){
+    var links=[['admin','Admin panel'],['projects','All projects'],['leaderboard','Leaderboard']];
+    nav.innerHTML=links.map(function(l){
+      return '<a class="'+(route===l[0]?'on':'')+'" onclick="go(\''+l[0]+'\')">'+l[1]+'</a>';
+    }).join('');
+    var pend=pendingSeniorReqs().length;
+    $('#hdRight').innerHTML='<button class="ib" onclick="go(\'admin\')" title="Pending requests">⚑'+(pend?'<span class="n">'+pend+'</span>':'')+'</button>'
+      +'<span class="av pa" onclick="go(\'profile\')" title="'+esc(u.name)+'">'+esc(u.name.charAt(0))+'</span>';
+  }else{
+    var links=u.role==='senior'
+      ?[['dash','Desk'],['projects','All projects'],['myprojects','My projects'],['leaderboard','Leaderboard']]
+      :[['dash','Dashboard'],['projects','Browse projects'],['mysubs','My work'],['leaderboard','Leaderboard']];
+    nav.innerHTML=links.map(function(l){
+      return '<a class="'+(route===l[0]?'on':'')+'" onclick="go(\''+l[0]+'\')">'+l[1]+'</a>';
+    }).join('');
+    var n=myNotifs().length;
+    $('#hdRight').innerHTML='<button class="ib" onclick="go(\'notifications\')">✉'+(n?'<span class="n">'+n+'</span>':'')+'</button>'
+      +'<span class="av" onclick="go(\'profile\')" title="'+esc(u.name)+'">'+esc(u.name.charAt(0))+'</span>';
+  }
+  var v=$('#view');
+  v.className='fade';
+  var view=VIEWS[route]||VIEWS.landing;
+  v.innerHTML=view();
+  if(route==='projects'){ drawProjects(); }
+}
+
+/* ══════════ VIEWS ══════════ */
+var VIEWS={};
+
+/* ---- landing ---- */
+VIEWS.landing=function(){
+  var u=me();
+  return '<div class="hero">'
+  +'<span class="pill pb">LEARN BY BUILDING · v1.0</span>'
+  +'<h1 style="margin-top:22px">Real projects.<br>Real <em>review</em>. Real growth.</h1>'
+  +'<p>Seniors post real projects with clear requirements. Juniors subscribe, build in their own GitHub repo, and get a full code review when they ship. Free work for seniors, real experience for juniors.</p>'
+  +(u
+    ?'<button class="btn acc" style="padding:13px 26px" onclick="go(\'dash\')">Open dashboard →</button>'
+    :'<button class="btn acc" style="padding:13px 26px" onclick="go(\'register\')">Join now →</button> '
+     +'<button class="btn gh" style="padding:13px 26px" onclick="go(\'login\')">Sign in</button>')
+  +'<div class="tick">'
+  +'<span>● <b>'+db.projects.length+'</b> projects</span>'
+  +'<span>● <b>'+db.users.filter(function(x){return x.role==='junior'}).length+'</b> juniors building</span>'
+  +'<span>● <b>'+db.subs.filter(function(s){return s.status==='submitted'}).length+'</b> waiting review</span>'
+  +'</div></div>'
+  +'<div class="feat">'
+  +'<div><span class="n">01</span><b>Senior posts a project</b><p>Requirements, stack, max juniors, and a Discord channel for questions and the final review.</p></div>'
+  +'<div><span class="n">02</span><b>Junior builds it</b><p>Subscribe, create your own GitHub repo, ask questions on Discord, then submit your repo link.</p></div>'
+  +'<div><span class="n">03</span><b>Review &amp; verdict</b><p>The senior reviews the code: approved, or changes requested with real feedback. Learning by doing.</p></div>'
+  +'</div>';
+};
+
+/* ---- auth ---- */
+VIEWS.login=function(){
+  return '<div class="authbox"><h1 style="font-size:25px;margin:34px 0 4px">Sign in</h1><p class="lead">Welcome back.</p>'
+  +'<label>Email</label><input id="le" placeholder="senior@dev.io">'
+  +'<label>Password</label><input id="lp" type="password" onkeydown="if(event.key===\'Enter\')doLogin()">'
+  +'<div id="lerr"></div>'
+  +'<button class="btn" style="width:100%;margin-top:22px" onclick="doLogin()">Sign in</button>'
+  +'<p style="text-align:center;margin-top:20px;font-size:13px;color:var(--mut)">No account? <span class="act" onclick="go(\'register\')">Create one</span></p>'
+  +'<div class="card mono" style="margin-top:22px;font-size:11px;color:var(--mut)">DEMO — senior@dev.io / junior@dev.io / admin@dev.io<br>PASSWORD: demo1234'
+  +'<div style="margin-top:8px"><span class="act" onclick="resetDemo()">↺ Reset demo data</span></div></div></div>';
+};
+VIEWS.register=function(){
+  return '<div class="authbox"><h1 style="font-size:25px">Create account</h1><p class="lead">No GitHub auth needed — you bring your own repo.</p>'
+  +'<label>Full name</label><input id="rn">'
+  +'<label>Email</label><input id="re" type="email">'
+  +'<label>Password (min 8)</label><input id="rp" type="password">'
+  +'<div id="rerr"></div>'
+  +'<button class="btn" style="width:100%;margin-top:20px" onclick="doRegister()">Create account</button>'
+  +'<p style="text-align:center;margin-top:16px;font-size:13px;color:var(--mut)">Have an account? <span class="act" onclick="go(\'login\')">Sign in</span></p>'
+  +'<div class="card mono" style="margin-top:22px;font-size:11px;color:var(--mut)">Everyone starts as a junior. Want to post projects? Request senior status from your profile once you\'re in — an admin reviews your LinkedIn before approving.</div></div>';
+};
+function doLogin(){
+  var e=$('#le').value.trim().toLowerCase(),p=$('#lp').value;
+  var u=db.users.find(function(x){return x.email.toLowerCase()===e&&x.pw===p});
+  if(!u){
+    $('#lerr').innerHTML='<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Wrong credentials. Try <b>senior@dev.io</b> or <b>junior@dev.io</b> / <b>demo1234</b></div>';
+    return;
+  }
+  db.session=u.id;save();toast('Signed in as '+u.name+' ('+u.role+')');go(u.role==='admin'?'admin':'dash');
+}
+function doRegister(){
+  var n=$('#rn').value.trim(),e=$('#re').value.trim().toLowerCase(),p=$('#rp').value;
+  if(!n||!e||p.length<8){
+    $('#rerr').innerHTML='<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">All fields required · password ≥ 8 chars</div>';
+    return;
+  }
+  var exists=db.users.some(function(x){return x.email.toLowerCase()===e});
+  if(exists){
+    $('#rerr').innerHTML='<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Email already registered</div>';
+    return;
+  }
+  var u={id:db.nextId++,name:n,email:e,pw:p,role:'junior',xp:0,linkedin:'',seniorReq:null};
+  db.users.push(u);db.session=u.id;save();
+  toast('Welcome, '+n);go('dash');
+}
+function logout(){ db.session=null;save();go('landing');toast('Signed out'); }
+
+/* ---- shell ---- */
+function shell(inner){
+  return '<div class="split"><div class="side">'+sideLinks()+'</div><div class="main">'+inner+'</div></div>';
+}
+function sideLinks(){
+  var u=me();
+  var a=u.role==='admin'
+    ?[['admin','⚑ Admin panel'],['projects','▤ All projects'],['leaderboard','↑ Leaderboard']]
+    :u.role==='senior'
+    ?[['dash','◧ Desk'],['projects','▤ All projects'],['myprojects','✦ My projects'],['leaderboard','↑ Leaderboard']]
+    :[['dash','⌂ Dashboard'],['projects','▤ Browse projects'],['mysubs','≡ My work'],['leaderboard','↑ Leaderboard']];
+  a.push(['profile','◎ Profile']);
+  return a.map(function(l){
+    return '<a class="'+(route===l[0]?'on':'')+'" onclick="go(\''+l[0]+'\')">'+l[1]+'</a>';
+  }).join('')
+  +'<div class="grow"></div><a onclick="logout()" style="color:var(--bad)">⏻ Sign out</a>';
+}
+
+/* ---- shared: status pill + sub card ---- */
+function subPill(st){
+  var map={
+    working:'<span class="pill pb">working</span>',
+    submitted:'<span class="pill py">submitted</span>',
+    approved:'<span class="pill pg">approved</span>',
+    changes:'<span class="pill pr">changes needed</span>'
+  };
+  return map[st]||'';
+}
+function subCard(s,isSenior){
+  var p=proj(s.project);
+  if(!p)return '';
+  return '<div class="card" style="margin-bottom:12px">'
+  +'<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">'
+  +'<b>'+esc(p.title)+'</b>'+subPill(s.status)
+  +'<span class="mono" style="color:var(--mut)">'+esc(s.ago)+'</span>'
+  +'<div style="flex:1"></div>'
+  +(isSenior&&s.status==='submitted'?'<button class="btn ok sm" onclick="reviewSub('+s.id+')">Review submission →</button>':'')
+  +(isSenior&&s.repo?'<span class="act mono" onclick="toast(\'Repo: '+esc(s.repo)+'\')">repo ↗</span>':'')
+  +'</div>'
+  +(s.feedback?'<div class="card" style="margin-top:12px;border-left:3px solid var(--acc);font-size:13.5px"><b style="font-size:11px;letter-spacing:.07em;color:var(--mut)">SENIOR FEEDBACK</b><br>'+esc(s.feedback)+'</div>':'')
+  +(s.status==='changes'&&!isSenior?'<button class="btn sm" style="margin-top:12px" onclick="resubmit('+s.id+')">Re-submit after changes</button>':'')
+  +(!isSenior&&(s.status==='approved'||s.status==='changes')&&!s.rated
+    ?'<button class="btn gh sm" style="margin-top:12px" onclick="openRateModal('+s.id+')">★ Rate this review</button>':'')
+  +'</div>';
+}
+
+/* ---- dashboards ---- */
+VIEWS.dash=function(){
+  var u=me();
+  if(!u)return VIEWS.login();
+  if(u.role==='senior'){
+    var mine=db.projects.filter(function(p){return p.senior===u.id});
+    var mineIds=mine.map(function(p){return p.id});
+    var waiting=db.subs.filter(function(s){return s.status==='submitted'&&mineIds.indexOf(s.project)>=0});
+    var totalSubs=db.subs.filter(function(s){return mineIds.indexOf(s.project)>=0}).length;
+    var approved=db.subs.filter(function(s){return s.status==='approved'&&mineIds.indexOf(s.project)>=0}).length;
+    return shell('<h1>Senior desk</h1><p class="lead">Your projects, your juniors, your free dev time.</p>'
+    +'<div class="stats">'
+    +'<div class="stat"><span>MY PROJECTS</span><b>'+mine.length+'</b></div>'
+    +'<div class="stat"><span>SUBSCRIBED JUNIORS</span><b>'+totalSubs+'</b></div>'
+    +'<div class="stat"><span>AWAITING REVIEW</span><b style="color:'+(waiting.length?'var(--warn)':'var(--ink)')+'">'+waiting.length+'</b></div>'
+    +'<div class="stat"><span>APPROVED</span><b style="color:var(--ok)">'+approved+'</b></div>'
+    +'</div>'
+    +(waiting.length?'<h2>Submissions to review</h2>'+waiting.map(function(s){return subCard(s,true)}).join(''):'')
+    +'<h2>Quick action</h2><div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">'
+    +'<div style="flex:1;min-width:200px"><b>Post a new project</b><div class="mono" style="color:var(--mut)">SET REQUIREMENTS · SLOTS · DISCORD CHANNEL</div></div>'
+    +'<button class="btn acc sm" onclick="go(\'newproject\')">+ New project</button></div>');
+  }
+  var mine=db.subs.filter(function(s){return s.junior===u.id});
+  var working=mine.filter(function(s){return s.status==='working'});
+  var submitted=mine.filter(function(s){return s.status==='submitted'});
+  var changes=mine.filter(function(s){return s.status==='changes'});
+  var done=mine.filter(function(s){return s.status==='approved'});
+  return shell('<h1>Hey, '+esc(u.name.split(' ')[0])+'</h1><p class="lead">Pick a project, build it, ship it, get reviewed.</p>'
+  +'<div class="stats">'
+  +'<div class="stat"><span>WORKING ON</span><b>'+working.length+'</b></div>'
+  +'<div class="stat"><span>SUBMITTED</span><b>'+submitted.length+'</b></div>'
+  +'<div class="stat"><span>CHANGES NEEDED</span><b style="color:'+(changes.length?'var(--bad)':'var(--ink)')+'">'+changes.length+'</b></div>'
+  +'<div class="stat"><span>APPROVED</span><b style="color:var(--ok)">'+done.length+'</b></div>'
+  +'</div>'
+  +(mine.length?'<h2>Your active work</h2>'+mine.map(function(s){return subCard(s,false)}).join(''):'')
+  +'<h2>Find a project</h2><div class="grid g3">'
+  +db.projects.slice(0,3).map(function(p){
+    return '<div class="card"><b style="display:block;margin-bottom:8px">'+esc(p.title)+'</b>'
+    +'<div class="mono" style="color:var(--mut)">'+subsOf(p.id).length+'/'+p.slots+' SLOTS TAKEN</div>'
+    +'<span class="act" onclick="openProject(\''+p.id+'\')">View →</span></div>';
+  }).join('')
+  +'</div>');
+};
+
+/* ---- projects browse ---- */
+var pFilter='all',pQuery='';
+VIEWS.projects=function(){
+  return shell('<h1>Projects</h1><p class="lead">Posted by seniors · subscribe, build, submit your repo.</p>'
+  +'<div style="margin-bottom:6px"><input placeholder="Search projects…" oninput="pQuery=this.value;drawProjects()"></div>'
+  +'<div class="chips">'+['all','open','full','mine'].map(function(d){
+    return '<button class="chip'+(pFilter===d?' on':'')+'" onclick="pFilter=\''+d+'\';render()">'+d+'</button>';
+  }).join('')+'</div>'
+ +'<div id="pgrid"></div>');
+};
+function drawProjects(){
+  var el=$('#pgrid');if(!el)return;
+  var u=me();
+  var list=db.projects.filter(function(p){
+    if(pQuery&&p.title.toLowerCase().indexOf(pQuery.toLowerCase())<0)return false;
+    var full=subsOf(p.id).length>=p.slots;
+    if(pFilter==='open')return !full;
+    if(pFilter==='full')return full;
+    if(pFilter==='mine')return u?subsOf(p.id).some(function(s){return s.junior===u.id}):false;
+    return true;
+  });
+  if(!list.length){ el.innerHTML='<div class="empty">No projects match.</div>'; return; }
+  el.innerHTML='<div class="grid g3">'+list.map(function(p){
+    var cnt=subsOf(p.id).length,full=cnt>=p.slots;
+    return '<div class="card">'
+    +'<div class="mono" style="color:var(--mut)">BY '+esc(uname(p.senior)).toUpperCase()+'</div>'
+    +'<b style="display:block;margin:10px 0 6px;font-size:16px">'+esc(p.title)+'</b>'
+    +'<p style="font-size:13px;color:var(--mut);margin-bottom:10px">'+esc(p.desc)+'</p>'
+    +'<div style="margin-bottom:12px">'+ratingBadge(p.senior)+'</div>'
+    +'<div style="display:flex;justify-content:space-between;align-items:center">'
+    +'<span class="pill '+(full?'py':'pg')+'">'+cnt+'/'+p.slots+' slots</span>'
+    +(u?'<span class="act" onclick="openProject(\''+p.id+'\')">View →</span>':'<span class="act" onclick="go(\'login\')">Sign in</span>')
+    +'</div></div>';
+  }).join('')+'</div>';
+}
+
+/* ---- project modal ---- */
+function openProject(id){
+  var p=proj(id);if(!p)return;
+  var u=me();
+  var cnt=subsOf(p.id).length,full=cnt>=p.slots;
+  var mySub=u?subsOf(p.id).find(function(s){return s.junior===u.id}):null;
+  var isOwner=u&&u.id===p.senior;
+  var sr=db.users.find(function(x){return x.id===p.senior});
+  var html='<div class="mono" style="color:var(--mut)">'+esc(p.id)+' · POSTED BY '+esc(uname(p.senior)).toUpperCase()+'</div>'
+  +'<h1 style="font-size:22px;margin:8px 0 6px">'+esc(p.title)+'</h1>'
+  +'<div class="card" style="display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap">'
+  +'<span class="avsm" style="width:30px;height:30px;font-size:11px">'+esc(uname(p.senior).charAt(0))+'</span>'
+  +'<div><b style="font-size:13.5px">'+esc(uname(p.senior))+'</b>'
+  +'<div class="mono" style="color:var(--mut);font-size:10.5px">'+xpOf(sr)+' XP</div></div>'
+  +'<div style="flex:1"></div>'+ratingBadge(p.senior)+'</div>'
+  +'<div style="margin-bottom:14px"><span class="pill '+(full?'py':'pg')+'">'+cnt+'/'+p.slots+' slots</span> <span class="pill pb">disc: '+esc(p.discord)+'</span></div>'
+  +'<p style="color:var(--mut)">'+esc(p.desc)+'</p>'
+  +'<h2 style="margin:22px 0 8px">Requirements</h2>'
+  +'<div class="card mono" style="white-space:pre-wrap;font-size:12.5;line-height:1.9">'+esc(p.reqs)+'</div>'
+  +'<h2 style="margin:22px 0 8px">Communication</h2>'
+  +'<div class="card" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span>💬 Questions &amp; final review happen on Discord</span>'
+  +'<div style="flex:1"></div><button class="btn gh sm" onclick="toast(\'Opening Discord… (demo)\')">'+esc(p.discord)+' ↗</button></div>';
+  if(isOwner){
+    html+='<h2 style="margin:22px 0 8px">Your juniors ('+cnt+')</h2>';
+    html+=cnt?subsOf(p.id).map(function(s){
+      return '<div class="card" style="margin-bottom:8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">'
+      +'<span class="avsm">'+esc(uname(s.junior).charAt(0))+'</span><b>'+esc(uname(s.junior))+'</b>'
+      +'<div style="flex:1"></div>'+subPill(s.status)
+      +(s.status==='submitted'?' <button class="btn ok sm" onclick="reviewSub('+s.id+')">Review →</button>':'')
+      +'</div>';
+    }).join(''):'<div class="empty">No subscribers yet.</div>';
+  }else if(u){
+    html+='<div style="margin-top:22px">';
+    if(mySub){
+      html+='<div class="card" style="border-left:3px solid var(--acc)"><b>You are subscribed</b> '+subPill(mySub.status);
+      if(mySub.status==='working'||mySub.status==='changes'){
+       html+='<div style="margin-top:14px">'
+          +'<label>Your GitHub repo link</label>'
+          +'<input id="subrepo" placeholder="https://github.com/you/repo" value="'+esc(mySub.repo)+'">'
+          +'<button class="btn acc sm" style="margin-top:12px" onclick="submitRepo('+mySub.id+')">Submit for review →</button>';
+        if(mySub.feedback){
+          html+='<div class="card" style="margin-top:12px;border-left:3px solid var(--acc);font-size:13.5px">'
+            +'<b style="font-size:11px;letter-spacing:.07em;color:var(--mut)">SENIOR FEEDBACK</b><br>'+esc(mySub.feedback)+'</div>';
+        }
+        html+='</div>';
+      }
+      html+='</div>';
+    }else if(full){
+      html+='<div class="card" style="text-align:center;color:var(--mut)">Project is full — '+cnt+'/'+p.slots+' juniors subscribed.</div>';
+    }else{
+      html+='<button class="btn acc" style="width:100%" onclick="subscribe(\''+p.id+'\')">Subscribe to this project ('+cnt+'/'+p.slots+')</button>'
+      +'<div class="mono" style="color:var(--mut);text-align:center;margin-top:10px">THEN CREATE YOUR OWN GITHUB REPO AND BUILD IT</div>';
+    }
+    html+='</div>';
+  }else{
+    html+='<p style="text-align:center;margin-top:20px;font-size:13px;color:var(--mut)">'
+      +'<span class="act" onclick="closeModal();go(\'login\')">Sign in to subscribe</span></p>';
+  }
+  html+='<div style="margin-top:18px;text-align:right"><button class="btn" onclick="closeModal()">Close</button></div>';
+  modal(html);
+}
+
+/* ---- subscribe / submit / review ---- */
+function subscribe(pid){
+  var u=me(),p=proj(pid);
+  if(!u||!p)return;
+  if(subsOf(pid).length>=p.slots){ toast('Project is full'); return; }
+  db.subs.push({id:db.nextId++,project:pid,junior:u.id,repo:'',status:'working',feedback:'',ago:'JUST NOW'});
+  notify(p.senior,u.name+' subscribed to "'+p.title+'"','acc');
+  save();
+  toast('Subscribed! Create your GitHub repo and start building.');
+  closeModal();render();
+}
+function submitRepo(sid){
+  var s=db.subs.find(function(x){return x.id===sid});
+  var url=$('#subrepo').value.trim();
+  if(!/^https?:\/\/.+\..+/.test(url)){ toast('Enter a valid repo URL (https://…)'); return; }
+  s.repo=url;s.status='submitted';s.ago='JUST NOW';
+  var p=proj(s.project);
+  notify(p.senior,me().name+' submitted a repo for "'+p.title+'"','acc');
+  save();
+  toast('Repo submitted — the senior will review it');
+  closeModal();render();
+}
+function resubmit(sid){
+  var s=db.subs.find(function(x){return x.id===sid});
+  s.status='submitted';s.ago='JUST NOW';
+  var p=proj(s.project);
+  notify(p.senior,me().name+' re-submitted "'+p.title+'"','acc');
+  save();
+  toast('Re-submitted for review');
+  render();
+}
+var verdict='approved';
+function reviewSub(sid){
+  var s=db.subs.find(function(x){return x.id===sid});
+  var p=proj(s.project);
+  verdict='approved';
+  modal('<div class="mono" style="color:var(--mut)">REVIEW · '+esc(p.id)+'</div>'
+  +'<h1 style="font-size:21px;margin:8px 0">'+esc(uname(s.junior))+' — '+esc(p.title)+'</h1>'
+  +'<div class="card mono" style="display:flex;gap:12px;align-items:center;margin:14px 0;flex-wrap:wrap"><span>📦</span>'
+  +'<span style="word-break:break-all">'+esc(s.repo||'No repo submitted yet')+'</span>'
+  +'<div style="flex:1"></div><button class="btn gh sm" onclick="toast(\'Opening repo… (demo)\')">Open ↗</button></div>'
+  +'<label>Verdict</label><div class="chips" style="margin:6px 0">'
+  +'<button class="chip on" id="vok" onclick="pickV(\'approved\')">✓ Approve</button>'
+  +'<button class="chip" id="vch" onclick="pickV(\'changes\')">↺ Request changes</button></div>'
+  +'<label>Feedback for the junior</label>'
+  +'<textarea id="vfb" rows="4" placeholder="What was good, what to improve…"></textarea>'
+  +'<div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end">'
+  +'<button class="btn" onclick="closeModal()">Cancel</button>'
+  +'<button class="btn acc" onclick="sendReview('+sid+')">Send review</button></div>');
+}
+function pickV(v){
+  verdict=v;
+  $('#vok').classList.toggle('on',v==='approved');
+  $('#vch').classList.toggle('on',v==='changes');
+}
+var XP_JUNIOR_APPROVED=50,XP_SENIOR_VALIDATED=30;
+function sendReview(sid){
+  var s=db.subs.find(function(x){return x.id===sid});
+  var fb=$('#vfb').value.trim();
+  s.status=verdict;s.feedback=fb;s.ago='JUST NOW';s.rated=false;
+  var p=proj(s.project);
+  if(verdict==='approved'){
+    var j=db.users.find(function(x){return x.id===s.junior});
+    var sr=db.users.find(function(x){return x.id===p.senior});
+    if(j)j.xp=xpOf(j)+XP_JUNIOR_APPROVED;
+    if(sr)sr.xp=xpOf(sr)+XP_SENIOR_VALIDATED;
+  }
+  notify(s.junior,'Your submission for "'+p.title+'" was '
+    +(verdict==='approved'?'APPROVED 🎉 (+'+XP_JUNIOR_APPROVED+' xp)':'sent back with feedback'),
+    verdict==='approved'?'ok':'bad');
+  save();closeModal();
+  toast(verdict==='approved'?'Approved — junior notified':'Changes requested');
+  render();
+}
+
+/* ---- junior rates senior's review ---- */
+var rateValue=5;
+function pickStar(n){ rateValue=n; var el=$('#starpick'); if(el)el.outerHTML=starsRow(rateValue,true); }
+function openRateModal(sid){
+  var s=db.subs.find(function(x){return x.id===sid});
+  if(!s)return;
+  var p=proj(s.project);
+  rateValue=5;
+  modal('<div class="mono" style="color:var(--mut)">RATE THE REVIEW · '+esc(p.id)+'</div>'
+  +'<h1 style="font-size:21px;margin:8px 0">'+esc(uname(p.senior))+' — '+esc(p.title)+'</h1>'
+  +'<p style="color:var(--mut);font-size:13.5px">How was the code review you got? This is visible on '+esc(uname(p.senior))+'\'s profile, like on intra42.</p>'
+  +'<label>Rating</label>'+starsRow(rateValue,true)
+  +'<label>Comment (optional)</label>'
+  +'<textarea id="rt-c" rows="4" placeholder="What was helpful, what could be clearer…"></textarea>'
+  +'<div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end">'
+  +'<button class="btn" onclick="closeModal()">Cancel</button>'
+  +'<button class="btn acc" onclick="submitRating('+sid+')">Submit rating</button></div>');
+}
+function submitRating(sid){
+  var s=db.subs.find(function(x){return x.id===sid});
+  if(!s)return;
+  var p=proj(s.project);
+  var comment=$('#rt-c').value.trim();
+  db.seniorReviews.push({id:db.nextId++,senior:p.senior,junior:s.junior,project:p.id,sub:s.id,stars:rateValue,comment:comment,ago:'JUST NOW'});
+  s.rated=true;
+  notify(p.senior,me().name+' rated your review on "'+p.title+'" '+rateValue+'★','acc');
+  save();closeModal();
+  toast('Thanks — rating submitted');
+  render();
+}
+
+/* ---- junior: my work ---- */
+VIEWS.mysubs=function(){
+  var u=me();
+  var mine=db.subs.filter(function(s){return s.junior===u.id});
+  return shell('<h1>My work</h1><p class="lead">Everything you subscribed to, and its review status.</p>'
+  +(mine.length
+    ?mine.map(function(s){return subCard(s,false)}).join('')
+    :'<div class="empty">Nothing yet — browse projects and subscribe to one.</div>'
+     +'<br><button class="btn acc" onclick="go(\'projects\')">Browse projects →</button>'));
+};
+
+/* ---- senior: my projects ---- */
+VIEWS.myprojects=function(){
+  var u=me();
+  var mine=db.projects.filter(function(p){return p.senior===u.id});
+  return shell('<h1>My projects</h1><p class="lead">Projects you posted as a senior.</p>'
+  +'<div style="margin-bottom:18px"><button class="btn acc sm" onclick="go(\'newproject\')">+ Post new project</button></div>'
+  +(mine.length
+    ?'<div class="grid g2">'+mine.map(function(p){
+      var cnt=subsOf(p.id).length;
+      return '<div class="card"><div class="mono" style="color:var(--mut)">'+esc(p.id)+'</div>'
+      +'<b style="display:block;margin:8px 0 6px;font-size:16px">'+esc(p.title)+'</b>'
+      +'<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">'
+      +'<span class="pill '+(cnt>=p.slots?'py':'pg')+'">'+cnt+'/'+p.slots+' slots</span>'
+      +'<span class="pill pb">disc: '+esc(p.discord)+'</span></div>'
+      +'<span class="act" onclick="openProject(\''+p.id+'\')">Manage juniors →</span></div>';
+    }).join('')+'</div>'
+    :'<div class="empty">No projects yet. Post your first one and get free dev help.</div>'));
+};
+
+/* ---- senior: new project ---- */
+VIEWS.newproject=function(){
+  return shell('<h1>Post a project</h1><p class="lead">Set the requirements, the slots, and your Discord.</p>'
+  +'<div class="card" style="max-width:640px">'
+  +'<label>Project title</label><input id="np-t" placeholder="e.g. Task Manager REST API">'
+  +'<label>Short description</label><input id="np-d" placeholder="What the junior will build, in one sentence">'
+  +'<label>Requirements (one per line)</label><textarea id="np-r" rows="6" placeholder="- Java · Spring Boot&#10;- JWT auth&#10;- Unit tests&#10;- Clean commits"></textarea>'
+  +'<label>Max juniors (slots)</label><input id="np-s" type="number" min="1" max="20" value="3">'
+  +'<label>Your Discord invite (create a channel for this project)</label><input id="np-c" placeholder="discord.gg/yourserver">'
+  +'<div id="np-err"></div>'
+  +'<div style="display:flex;gap:10px;margin-top:22px;justify-content:flex-end">'
+  +'<button class="btn" onclick="go(\'myprojects\')">Cancel</button>'
+  +'<button class="btn acc" onclick="createProject()">Publish project →</button></div></div>');
+};
+function createProject(){
+  var t=$('#np-t').value.trim(),d=$('#np-d').value.trim(),r=$('#np-r').value.trim();
+  var sl=parseInt($('#np-s').value,10);
+  var c=$('#np-c').value.trim()||'discord.gg/yourserver';
+  if(!t||!d||!r||!sl||sl<1){
+    $('#np-err').innerHTML='<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Title, description, requirements and slots (≥1) are required.</div>';
+    return;
+  }
+  var u=me();
+  db.projects.push({
+    id:'P-'+String(db.projects.length+1).padStart(2,'0'),
+    senior:u.id,title:t,desc:d,reqs:r,slots:sl,discord:c
+  });
+  save();
+  toast('Project published — juniors can now subscribe');
+  go('myprojects');
+}
+
+/* ---- leaderboard ---- */
+var lbTab='juniors';
+function setLbTab(t){ lbTab=t; render(); }
+VIEWS.leaderboard=function(){
+  var body=lbTab==='juniors'?leaderboardJuniors():leaderboardSeniors();
+  return shell('<h1>Leaderboard</h1><p class="lead">Ranked by XP — earned on every project shipped and validated.</p>'
+  +'<div class="chips">'
+  +'<button class="chip'+(lbTab==='juniors'?' on':'')+'" onclick="setLbTab(\'juniors\')">Juniors</button>'
+  +'<button class="chip'+(lbTab==='seniors'?' on':'')+'" onclick="setLbTab(\'seniors\')">Seniors</button>'
+  +'</div>'+body);
+};
+function leaderboardJuniors(){
+  var rows=db.users.filter(function(u){return u.role==='junior'}).map(function(u){
+    var m=db.subs.filter(function(s){return s.junior===u.id});
+    return {u:u,subs:m.length,ok:m.filter(function(s){return s.status==='approved'}).length,xp:xpOf(u)};
+  }).sort(function(a,b){return b.xp-a.xp});
+  var maxXp=Math.max.apply(null,rows.map(function(r){return r.xp}).concat([1]));
+  return '<div class="tblw"><table><tr><th>#</th><th>Junior</th><th>XP</th><th>Subscriptions</th><th>Approved</th></tr>'
+  +(rows.length
+    ?rows.map(function(r,i){
+      return '<tr><td class="mono'+(i===0?' rank1':'')+'" style="'+(i===0?'':'color:var(--mut)')+'">'+(i===0?'★':String(i+1).padStart(2,'0'))+'</td>'
+      +'<td><span class="avsm">'+esc(r.u.name.charAt(0))+'</span><b>'+esc(r.u.name)+'</b></td>'
+      +'<td class="mono"><b>'+r.xp+'</b> xp<div class="xpbar" style="width:80px"><i style="width:'+Math.round(r.xp/maxXp*100)+'%"></i></div></td>'
+      +'<td>'+r.subs+'</td>'
+      +'<td><span class="pill '+(r.ok?'pg':'pn')+'">'+r.ok+'</span></td></tr>';
+    }).join('')
+    :'<tr><td colspan="5" style="color:var(--mut);text-align:center;padding:26px">No juniors yet</td></tr>')
+  +'</table></div>';
+}
+function leaderboardSeniors(){
+  var rows=db.users.filter(function(u){return u.role==='senior'}).map(function(u){
+    var validated=db.projects.filter(function(p){return p.senior===u.id}).reduce(function(a,p){
+      return a+db.subs.filter(function(s){return s.project===p.id&&s.status==='approved'}).length;
+    },0);
+    return {u:u,xp:xpOf(u),r:seniorRating(u.id),validated:validated};
+  }).sort(function(a,b){return b.xp-a.xp});
+  var maxXp=Math.max.apply(null,rows.map(function(r){return r.xp}).concat([1]));
+  return '<div class="tblw"><table><tr><th>#</th><th>Senior</th><th>XP</th><th>Projects validated</th><th>Rating</th></tr>'
+  +(rows.length
+    ?rows.map(function(r,i){
+      return '<tr><td class="mono'+(i===0?' rank1':'')+'" style="'+(i===0?'':'color:var(--mut)')+'">'+(i===0?'★':String(i+1).padStart(2,'0'))+'</td>'
+      +'<td><span class="avsm">'+esc(r.u.name.charAt(0))+'</span><b>'+esc(r.u.name)+'</b></td>'
+      +'<td class="mono"><b>'+r.xp+'</b> xp<div class="xpbar" style="width:80px"><i style="width:'+Math.round(r.xp/maxXp*100)+'%"></i></div></td>'
+      +'<td>'+r.validated+'</td>'
+      +'<td>'+ratingBadge(r.u.id)+'</td></tr>';
+    }).join('')
+    :'<tr><td colspan="5" style="color:var(--mut);text-align:center;padding:26px">No seniors yet</td></tr>')
+  +'</table></div>';
+}
+
+/* ---- profile ---- */
+VIEWS.profile=function(){
+  var u=me();
+  if(!u)return VIEWS.login();
+  var roleClass=u.role==='senior'?'pb':u.role==='admin'?'pa':'pg';
+  var html='<h1>Profile</h1><p class="lead">Your account.</p>'
+  +'<div class="card" style="max-width:560px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">'
+  +'<span class="av" style="width:56px;height:56px;font-size:20px">'+esc(u.name.charAt(0))+'</span>'
+  +'<div style="flex:1;min-width:180px"><b style="font-size:18px">'+esc(u.name)+'</b>'
+  +'<div class="mono" style="color:var(--mut)">'+esc(u.email)+'</div>'
+  +'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">'
+  +'<span class="pill '+roleClass+'">'+u.role.toUpperCase()+'</span>'
+  +(u.role!=='admin'?'<span class="pill pn mono">'+xpOf(u)+' XP</span>':'')
+  +(u.role==='senior'?ratingBadge(u.id):'')
+  +'</div></div></div>';
+
+  if(u.role==='senior'){
+    var revs=db.seniorReviews.filter(function(r){return r.senior===u.id}).slice().reverse();
+    html+='<h2>Reviews from juniors</h2>'
+    +(revs.length
+      ?'<div class="card" style="max-width:560px">'+revs.map(function(r){
+        return '<div class="reviewrow"><div style="display:flex;justify-content:space-between;align-items:center">'
+        +'<b>'+esc(uname(r.junior))+'</b><span class="mono" style="color:var(--mut)">'+esc(r.ago)+'</span></div>'
+        +starsRow(r.stars,false)
+        +(r.comment?'<p style="margin-top:6px;color:var(--mut);font-size:13.5px">'+esc(r.comment)+'</p>':'')
+        +'</div>';
+      }).join('')+'</div>'
+      :'<div class="empty" style="max-width:560px">No reviews yet — they show up once juniors rate your feedback.</div>');
+  }
+
+  if(u.role==='junior'){
+    html+='<h2>Become a senior</h2>';
+    if(u.seniorReq&&u.seniorReq.status==='pending'){
+      html+='<div class="card" style="max-width:560px"><span class="pill py">PENDING</span>'
+        +'<p style="margin-top:10px;color:var(--mut);font-size:13.5px">Your request is waiting for admin approval.</p>'
+        +'<div class="mono" style="color:var(--mut);margin-top:8px">'+esc(u.seniorReq.linkedin)+'</div></div>';
+    }else{
+      html+='<div class="card" style="max-width:560px">'
+        +(u.seniorReq&&u.seniorReq.status==='rejected'?'<span class="pill pr">REJECTED — you can request again</span>':'')
+        +'<p style="color:var(--mut);font-size:13.5px;margin:8px 0 4px">Post your own projects for juniors to build. An admin reviews your LinkedIn before approving.</p>'
+        +'<label>LinkedIn profile</label><input id="pf-li" placeholder="linkedin.com/in/you" value="'+esc(u.linkedin||'')+'">'
+        +'<div id="pf-err"></div>'
+        +'<button class="btn acc sm" style="margin-top:14px" onclick="requestSenior()">Request senior status →</button></div>';
+    }
+  }
+
+  html+='<div style="max-width:560px;margin-top:18px"><button class="btn gh" onclick="logout()">Sign out</button></div>';
+  return shell(html);
+};
+function requestSenior(){
+  var li=$('#pf-li').value.trim();
+  if(!li){
+    $('#pf-err').innerHTML='<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">A LinkedIn profile link is required.</div>';
+    return;
+  }
+  var u=me();
+  u.linkedin=li;
+  u.seniorReq={status:'pending',linkedin:li,ago:'JUST NOW'};
+  save();
+  toast('Request sent — an admin will review it');
+  render();
+}
+
+/* ---- notifications ---- */
+VIEWS.notifications=function(){
+  var u=me();
+  if(!u)return VIEWS.login();
+  var mine=db.notifs.filter(function(n){return n.user===u.id}).slice().reverse();
+  return shell('<h1>Notifications</h1><p class="lead">'+(mine.length?mine.length+' update'+(mine.length>1?'s':''):'All quiet.')+'</p>'
+  +(mine.length
+    ?mine.map(function(n){
+      return '<div class="card" style="display:flex;gap:14px;margin-bottom:10px;align-items:center">'
+      +'<span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:'
+      +(n.kind==='ok'?'var(--ok)':n.kind==='bad'?'var(--bad)':'var(--acc)')+'"></span>'
+      +'<div style="flex:1">'+esc(n.txt)+'</div>'
+      +'<span class="mono" style="color:var(--mut)">'+esc(n.ago)+'</span></div>';
+    }).join('')
+    :'<div class="empty">No notifications yet.</div>'));
+};
+
+/* ---- admin panel ---- */
+VIEWS.admin=function(){
+  var u=me();
+  if(!u||u.role!=='admin')return VIEWS.login();
+  var pend=pendingSeniorReqs();
+  var seniors=db.users.filter(function(x){return x.role==='senior'}).length;
+  var juniors=db.users.filter(function(x){return x.role==='junior'}).length;
+  return shell('<h1>Admin panel</h1><p class="lead">Approve senior requests and keep an eye on the platform.</p>'
+  +'<div class="stats">'
+  +'<div class="stat"><span>TOTAL USERS</span><b>'+db.users.length+'</b></div>'
+  +'<div class="stat"><span>SENIORS</span><b>'+seniors+'</b></div>'
+  +'<div class="stat"><span>JUNIORS</span><b>'+juniors+'</b></div>'
+  +'<div class="stat"><span>PENDING REQUESTS</span><b style="color:'+(pend.length?'var(--warn)':'var(--ink)')+'">'+pend.length+'</b></div>'
+  +'</div>'
+  +'<h2>Senior status requests</h2>'
+  +(pend.length
+    ?pend.map(function(r){
+      return '<div class="card" style="margin-bottom:10px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">'
+      +'<span class="avsm">'+esc(r.name.charAt(0))+'</span>'
+      +'<div style="flex:1;min-width:180px"><b>'+esc(r.name)+'</b>'
+      +'<div class="mono" style="color:var(--mut)">'+esc(r.email)+'</div></div>'
+      +'<a href="https://'+esc((r.seniorReq.linkedin||'').replace(/^https?:\/\//,''))+'" target="_blank" class="chip">'+esc(r.seniorReq.linkedin)+' ↗</a>'
+      +'<span class="mono" style="color:var(--mut)">'+esc(r.seniorReq.ago)+'</span>'
+      +'<button class="btn ok sm" onclick="approveSenior('+r.id+')">✓ Approve</button>'
+      +'<button class="btn gh sm" onclick="rejectSenior('+r.id+')">✕ Reject</button>'
+      +'</div>';
+    }).join('')
+    :'<div class="empty">No pending requests.</div>')
+  +'<h2>All users</h2>'
+  +'<div class="tblw"><table><tr><th>Name</th><th>Email</th><th>Role</th><th>XP</th></tr>'
+  +db.users.map(function(x){
+    return '<tr><td><span class="avsm">'+esc(x.name.charAt(0))+'</span><b>'+esc(x.name)+'</b></td>'
+    +'<td class="mono" style="color:var(--mut)">'+esc(x.email)+'</td>'
+    +'<td><span class="pill '+(x.role==='senior'?'pb':x.role==='admin'?'pa':'pg')+'">'+x.role.toUpperCase()+'</span></td>'
+    +'<td>'+xpOf(x)+'</td></tr>';
+  }).join('')
+  +'</table></div>');
+};
+function approveSenior(uid){
+  var u=db.users.find(function(x){return x.id===uid});
+  if(!u)return;
+  u.role='senior';
+  u.seniorReq.status='approved';
+  notify(u.id,'You are now a senior — you can post projects 🎉','ok');
+  save();
+  toast(u.name+' approved as senior');
+  render();
+}
+function rejectSenior(uid){
+  var u=db.users.find(function(x){return x.id===uid});
+  if(!u)return;
+  u.seniorReq.status='rejected';
+  notify(u.id,'Your senior request was declined. You can re-apply anytime.','bad');
+  save();
+  toast(u.name+'\'s request rejected');
+  render();
+}
+
+/* ---- modal helpers ---- */
+function modal(html){
+  closeModal();
+  var o=document.createElement('div');
+  o.className='ov';o.id='ov';
+  o.innerHTML='<div class="modal fade">'+html+'</div>';
+  o.addEventListener('click',function(e){ if(e.target===o)closeModal(); });
+  document.body.appendChild(o);
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  var o=$('#ov');
+  if(o)o.remove();
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeModal(); });
+
+/* ---- boot ---- */
+render();
+</script>
+</body>
+</html>
