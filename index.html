@@ -117,9 +117,9 @@ tr:last-child td{border:none}
 "use strict";
 /* ══════════ STORE ══════════ */
 var DB_KEY='devhub_v3';
+var SESSION_KEY='devhub_session';
 function freshDb(){
   return {
-    session:null,
     nextId:100,
     users:[
       {id:1,name:'Karim Senior',email:'senior@dev.io',pw:'demo1234',role:'senior',xp:340,linkedin:'linkedin.com/in/karim-senior',seniorReq:null},
@@ -144,21 +144,47 @@ function freshDb(){
     ]
   };
 }
+/*
+  Two separate stores on purpose:
+  - db (localStorage, DB_KEY): shared app data — same across every tab/window.
+  - session (sessionStorage, SESSION_KEY): which user THIS tab is signed in as.
+  Keeping "who's logged in" out of the shared db is what stops tabs from
+  stomping on each other's login: sessionStorage is private per tab, so
+  signing in as someone else in another tab never touches this tab, and
+  saving app data from this tab never overwrites another tab's session.
+*/
+function normalizeDb(){
+  if(!db.users.some(function(u){return u.role==='admin'})){
+    db.users.push({id:db.nextId++,name:'Admin',email:'admin@dev.io',pw:'demo1234',role:'admin',xp:0,linkedin:'',seniorReq:null});
+  }
+  if(!db.seniorReviews)db.seniorReviews=[];
+  db.users.forEach(function(u){ if(u.xp==null)u.xp=0; if(u.linkedin==null)u.linkedin=''; if(u.seniorReq===undefined)u.seniorReq=null; });
+  db.subs.forEach(function(s){ if(s.rated==null)s.rated=false; });
+  delete db.session; // legacy field from before sessions were split out — no longer used
+}
 var db;
 try{ db=JSON.parse(localStorage.getItem(DB_KEY)); }catch(e){ db=null; }
 if(!db || !db.users){ db=freshDb(); }
-if(!db.users.some(function(u){return u.role==='admin'})){
-  db.users.push({id:db.nextId++,name:'Admin',email:'admin@dev.io',pw:'demo1234',role:'admin',xp:0,linkedin:'',seniorReq:null});
-}
-if(!db.seniorReviews)db.seniorReviews=[];
-db.users.forEach(function(u){ if(u.xp==null)u.xp=0; if(u.linkedin==null)u.linkedin=''; if(u.seniorReq===undefined)u.seniorReq=null; });
-db.subs.forEach(function(s){ if(s.rated==null)s.rated=false; });
+normalizeDb();
 function save(){ localStorage.setItem(DB_KEY,JSON.stringify(db)); }
 save();
-function resetDemo(){ localStorage.removeItem(DB_KEY); location.reload(); }
+function resetDemo(){ localStorage.removeItem(DB_KEY); sessionStorage.removeItem(SESSION_KEY); location.reload(); }
+function setSession(uid){ if(uid==null)sessionStorage.removeItem(SESSION_KEY); else sessionStorage.setItem(SESSION_KEY,String(uid)); }
+function getSession(){ var v=sessionStorage.getItem(SESSION_KEY); return v?parseInt(v,10):null; }
+
+/* keep every open tab in sync when data changes elsewhere (another tab
+   subscribing, a senior reviewing, an admin approving, etc.) — each tab's
+   own login is untouched since that lives in sessionStorage, not here */
+window.addEventListener('storage',function(e){
+  if(e.key!==DB_KEY)return;
+  if(!e.newValue){ db=freshDb(); normalizeDb(); render(); return; }
+  try{ db=JSON.parse(e.newValue); }catch(err){ return; }
+  normalizeDb();
+  render();
+});
 
 /* helpers */
-function me(){ return db.users.find(function(u){return u.id===db.session})||null; }
+function me(){ var id=getSession(); return id?(db.users.find(function(u){return u.id===id})||null):null; }
 function uname(id){ var u=db.users.find(function(u){return u.id===id}); return u?u.name:'—'; }
 function proj(id){ return db.projects.find(function(p){return p.id===id}); }
 function subsOf(pid){ return db.subs.filter(function(s){return s.project===pid}); }
@@ -288,7 +314,7 @@ function doLogin(){
     $('#lerr').innerHTML='<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Wrong credentials. Try <b>senior@dev.io</b> or <b>junior@dev.io</b> / <b>demo1234</b></div>';
     return;
   }
-  db.session=u.id;save();toast('Signed in as '+u.name+' ('+u.role+')');go(u.role==='admin'?'admin':'dash');
+  setSession(u.id);save();toast('Signed in as '+u.name+' ('+u.role+')');go(u.role==='admin'?'admin':'dash');
 }
 function doRegister(){
   var n=$('#rn').value.trim(),e=$('#re').value.trim().toLowerCase(),p=$('#rp').value;
@@ -302,17 +328,22 @@ function doRegister(){
     return;
   }
   var u={id:db.nextId++,name:n,email:e,pw:p,role:'junior',xp:0,linkedin:'',seniorReq:null};
-  db.users.push(u);db.session=u.id;save();
+  db.users.push(u);setSession(u.id);save();
   toast('Welcome, '+n);go('dash');
 }
-function logout(){ db.session=null;save();go('landing');toast('Signed out'); }
+function logout(){ setSession(null);pFilter='all';go('landing');toast('Signed out'); }
 
 /* ---- shell ---- */
 function shell(inner){
+  var u=me();
+  if(!u){
+    return '<div class="main" style="max-width:1100px;margin:0 auto">'+inner+'</div>';
+  }
   return '<div class="split"><div class="side">'+sideLinks()+'</div><div class="main">'+inner+'</div></div>';
 }
 function sideLinks(){
   var u=me();
+  if(!u)return '';
   var a=u.role==='admin'
     ?[['admin','⚑ Admin panel'],['projects','▤ All projects'],['leaderboard','↑ Leaderboard']]
     :u.role==='senior'
@@ -400,9 +431,11 @@ VIEWS.dash=function(){
 /* ---- projects browse ---- */
 var pFilter='all',pQuery='';
 VIEWS.projects=function(){
+  var u=me();
+  var filters=u?['all','open','full','mine']:['all','open','full'];
   return shell('<h1>Projects</h1><p class="lead">Posted by seniors · subscribe, build, submit your repo.</p>'
   +'<div style="margin-bottom:6px"><input placeholder="Search projects…" oninput="pQuery=this.value;drawProjects()"></div>'
-  +'<div class="chips">'+['all','open','full','mine'].map(function(d){
+  +'<div class="chips">'+filters.map(function(d){
     return '<button class="chip'+(pFilter===d?' on':'')+'" onclick="pFilter=\''+d+'\';render()">'+d+'</button>';
   }).join('')+'</div>'
  +'<div id="pgrid"></div>');
@@ -428,7 +461,7 @@ function drawProjects(){
     +'<div style="margin-bottom:12px">'+ratingBadge(p.senior)+'</div>'
     +'<div style="display:flex;justify-content:space-between;align-items:center">'
     +'<span class="pill '+(full?'py':'pg')+'">'+cnt+'/'+p.slots+' slots</span>'
-    +(u?'<span class="act" onclick="openProject(\''+p.id+'\')">View →</span>':'<span class="act" onclick="go(\'login\')">Sign in</span>')
+    +'<span class="act" onclick="openProject(\''+p.id+'\')">View →</span>'
     +'</div></div>';
   }).join('')+'</div>';
 }
@@ -488,8 +521,12 @@ function openProject(id){
     }
     html+='</div>';
   }else{
-    html+='<p style="text-align:center;margin-top:20px;font-size:13px;color:var(--mut)">'
-      +'<span class="act" onclick="closeModal();go(\'login\')">Sign in to subscribe</span></p>';
+    html+='<div class="card" style="text-align:center;margin-top:20px">'
+      +'<div class="mono" style="color:var(--mut);margin-bottom:10px">'+cnt+'/'+p.slots+' slots taken</div>'
+      +'<div style="color:var(--mut);font-size:13.5px;margin-bottom:14px">Sign in to subscribe and start building this project.</div>'
+      +'<button class="btn acc sm" onclick="closeModal();go(\'login\')">Sign in</button> '
+      +'<button class="btn gh sm" onclick="closeModal();go(\'register\')">Create account</button>'
+      +'</div>';
   }
   html+='<div style="margin-top:18px;text-align:right"><button class="btn" onclick="closeModal()">Close</button></div>';
   modal(html);
@@ -604,6 +641,7 @@ function submitRating(sid){
 /* ---- junior: my work ---- */
 VIEWS.mysubs=function(){
   var u=me();
+  if(!u)return VIEWS.login();
   var mine=db.subs.filter(function(s){return s.junior===u.id});
   return shell('<h1>My work</h1><p class="lead">Everything you subscribed to, and its review status.</p>'
   +(mine.length
@@ -615,6 +653,7 @@ VIEWS.mysubs=function(){
 /* ---- senior: my projects ---- */
 VIEWS.myprojects=function(){
   var u=me();
+  if(!u)return VIEWS.login();
   var mine=db.projects.filter(function(p){return p.senior===u.id});
   return shell('<h1>My projects</h1><p class="lead">Projects you posted as a senior.</p>'
   +'<div style="margin-bottom:18px"><button class="btn acc sm" onclick="go(\'newproject\')">+ Post new project</button></div>'
@@ -633,6 +672,8 @@ VIEWS.myprojects=function(){
 
 /* ---- senior: new project ---- */
 VIEWS.newproject=function(){
+  var u=me();
+  if(!u||u.role!=='senior')return VIEWS.login();
   return shell('<h1>Post a project</h1><p class="lead">Set the requirements, the slots, and your Discord.</p>'
   +'<div class="card" style="max-width:640px">'
   +'<label>Project title</label><input id="np-t" placeholder="e.g. Task Manager REST API">'
@@ -646,6 +687,8 @@ VIEWS.newproject=function(){
   +'<button class="btn acc" onclick="createProject()">Publish project →</button></div></div>');
 };
 function createProject(){
+  var u=me();
+  if(!u||u.role!=='senior'){ go('login'); return; }
   var t=$('#np-t').value.trim(),d=$('#np-d').value.trim(),r=$('#np-r').value.trim();
   var sl=parseInt($('#np-s').value,10);
   var c=$('#np-c').value.trim()||'discord.gg/yourserver';
