@@ -1,110 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>devhub — learning by building</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#FAFAF7;--ink:#141412;--mut:#8B8B82;--line:#E5E5DE;--card:#FFF;--acc:#2E5BFF;--soft:#EEF1FF;--ok:#1E9E5A;--warn:#C77E0A;--bad:#D64545;--gold:#B8860B}
-html.dark{--bg:#0D0D0C;--ink:#F1F1EC;--mut:#87877F;--line:#252522;--card:#151513;--acc:#7B93FF;--soft:#181B2A;--gold:#E8B23D}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
-button{font-family:inherit;cursor:pointer;font-size:inherit}
-a{color:inherit;text-decoration:none}
-.mono{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.03em}
-#hd{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:26px;padding:0 36px;height:60px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px)}
-.wm{font-weight:700;font-size:17px;letter-spacing:-.02em;cursor:pointer}
-.wm i{color:var(--acc);font-style:normal}
-#hd nav{display:flex;gap:4px}
-#hd nav a{padding:6px 12px;border-radius:8px;font-size:14px;color:var(--mut);cursor:pointer}
-#hd nav a:hover{color:var(--ink)}
-#hd nav a.on{color:var(--acc);font-weight:600;background:var(--soft)}
-.sp{flex:1}
-.ib{background:none;border:1px solid var(--line);border-radius:9px;width:35px;height:35px;display:inline-flex;align-items:center;justify-content:center;color:var(--mut);position:relative}
-.ib:hover{color:var(--ink);border-color:var(--ink)}
-.ib .n{position:absolute;top:-5px;right:-5px;background:var(--acc);color:#fff;font-size:9px;font-weight:700;min-width:15px;height:15px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono'}
-.av{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--bg);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0}
-#view{min-height:calc(100vh - 60px)}
-.split{display:flex}
-.side{width:212px;border-right:1px solid var(--line);padding:28px 14px;flex-shrink:0;display:flex;flex-direction:column;min-height:calc(100vh - 60px)}
-.side a{display:flex;gap:10px;align-items:center;padding:9px 13px;border-radius:8px;color:var(--mut);font-size:14px;cursor:pointer;margin-bottom:2px}
-.side a.on{background:var(--soft);color:var(--acc);font-weight:600}
-.side a:hover{color:var(--ink)}
-.side .grow{flex:1}
-.main{flex:1;padding:44px 48px;min-width:0}
-h1{font-size:29px;letter-spacing:-.03em;font-weight:700}
-h2{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);margin:34px 0 14px;font-weight:600}
-.lead{color:var(--mut);margin:6px 0 30px}
-.btn{border-radius:9px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);padding:9px 18px;font-size:13.5px;font-weight:600;transition:.15s;display:inline-flex;gap:8px;align-items:center}
-.btn:hover{opacity:.86}
-.btn.acc{background:var(--acc);border-color:var(--acc);color:#fff}
-.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
-.btn.gh{background:transparent;color:var(--ink);border-color:var(--line)}
-.btn.gh:hover{border-color:var(--ink);opacity:1}
-.btn.sm{padding:6px 12px;font-size:12.5px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
-.grid{display:grid;gap:14px}
-.g3{grid-template-columns:repeat(3,1fr)}
-.g2{grid-template-columns:repeat(2,1fr)}
-.pill{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:3px 10px;border-radius:99px;font-weight:500;display:inline-block}
-.pg{color:var(--ok);background:color-mix(in srgb,var(--ok) 13%,transparent)}
-.py{color:var(--warn);background:color-mix(in srgb,var(--warn) 13%,transparent)}
-.pr{color:var(--bad);background:color-mix(in srgb,var(--bad) 11%,transparent)}
-.pb{color:var(--acc);background:var(--soft)}
-.pn{color:var(--mut);background:color-mix(in srgb,var(--mut) 13%,transparent)}
-.pw{color:var(--gold);background:color-mix(in srgb,var(--gold) 15%,transparent)}
-.pa{color:#fff;background:linear-gradient(135deg,var(--acc),#8B5CF6)}
-.star{font-size:19px;color:var(--line);line-height:1}
-.star.on{color:var(--gold)}
-.starrow{display:flex;gap:3px}
-.xpbar{height:5px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:6px}
-.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),#8B5CF6);border-radius:99px}
-.rank1{color:var(--gold);font-weight:700}
-.reviewrow{padding:14px 0;border-bottom:1px solid var(--line)}
-.reviewrow:last-child{border:none}
-.chip{font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 12px;border-radius:99px;border:1px solid var(--line);color:var(--mut);background:none}
-.chip.on{border-color:var(--acc);color:var(--acc);background:var(--soft)}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 22px}
-input,select,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:10px 14px;font-size:14px;font-family:inherit;color:var(--ink)}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--soft)}
-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);display:block;margin:16px 0 7px}
-.tblw{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-table{width:100%;border-collapse:collapse}
-th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);text-align:left;font-weight:600;padding:11px 16px;border-bottom:1px solid var(--line)}
-td{padding:13px 16px;border-bottom:1px solid var(--line);font-size:14px}
-tr:last-child td{border:none}
-.act{color:var(--acc);font-weight:600;font-size:13px;cursor:pointer}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.stat{background:var(--card);padding:20px 22px}
-.stat span{font-size:10.5px;color:var(--mut);font-family:'JetBrains Mono',monospace;letter-spacing:.07em}
-.stat b{font-size:30px;font-weight:700;letter-spacing:-.03em;display:block;margin:4px 0 2px}
-.avsm{width:24px;height:24px;border-radius:50%;background:var(--line);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;vertical-align:middle;margin-right:6px}
-.fade{animation:fd .3s ease}
-@keyframes fd{from{opacity:0;transform:translateY(5px)}}
-.empty{border:1px dashed var(--line);border-radius:12px;padding:36px;text-align:center;color:var(--mut)}
-.toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--bg);padding:13px 18px;border-radius:10px;font-size:13.5px;display:flex;gap:10px;align-items:center;z-index:99;animation:tin .25s cubic-bezier(.2,.9,.3,1.15);max-width:360px;box-shadow:0 14px 40px rgba(0,0,0,.28)}
-.toast .d{width:8px;height:8px;border-radius:50%;background:var(--ok);flex-shrink:0}
-@keyframes tin{from{transform:translateY(14px);opacity:0}}
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.42);backdrop-filter:blur(3px);display:flex;align-items:flex-start;justify-content:center;z-index:80;padding-top:12vh}
-.modal{background:var(--card);border:1px solid var(--line);border-radius:14px;width:600px;max-width:92vw;max-height:80vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.3);padding:24px 26px}
-.authbox{max-width:390px;margin:11vh auto;padding:0 24px}
-.hero{max-width:920px;margin:0 auto;padding:96px 40px 72px}
-.hero h1{font-size:clamp(36px,5.6vw,60px);line-height:1.06;letter-spacing:-.04em}
-.hero h1 em{color:var(--acc);font-style:normal}
-.hero p{color:var(--mut);font-size:17.5px;margin:20px 0 32px;max-width:560px}
-.tick{display:flex;gap:22px;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mut);flex-wrap:wrap}
-.tick b{color:var(--ink)}
-.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-top:1px solid var(--line)}
-.feat>div{background:var(--bg);padding:38px 34px}
-.feat .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--acc)}
-.feat b{display:block;font-size:16.5px;margin:12px 0 6px}
-.feat p{color:var(--mut);font-size:14px}
-@media(max-width:840px){.side{display:none}.main{padding:24px 18px}.g3,.g2{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}#hd{padding:0 14px;gap:10px}#hd nav{display:none}.hero{padding:56px 22px 48px}.feat{grid-template-columns:1fr}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>devhub — learning by building</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--ink); font-family: 'Space Grotesk', sans-serif; font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; min-height: 100vh; transition: background .35s, color .35s; }
+    :root { --bg: #FAFAF7; --ink: #141412; --mut: #8B8B82; --line: #E5E5DE; --card: #FFF; --acc: #2E5BFF; --soft: #EEF1FF; --ok: #1E9E5A; --warn: #C77E0A; --bad: #D64545; --gold: #B8860B; }
+    html.dark { --bg: #0D0D0C; --ink: #F1F1EC; --mut: #87877F; --line: #252522; --card: #151513; --acc: #7B93FF; --soft: #181B2A; --gold: #E8B23D; }
+    button { font-family: inherit; cursor: pointer; font-size: inherit; }
+    a { color: inherit; text-decoration: none; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: .03em; }
+    #hd { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; gap: 26px; padding: 0 36px; height: 60px; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(14px); }
+    .wm { font-weight: 700; font-size: 17px; letter-spacing: -.02em; cursor: pointer; }
+    .wm i { color: var(--acc); font-style: normal; }
+    #hd nav { display: flex; gap: 4px; }
+    #hd nav a { padding: 6px 12px; border-radius: 8px; font-size: 14px; color: var(--mut); cursor: pointer; transition: .18s; }
+    #hd nav a:hover { color: var(--ink); transform: translateY(-1px); }
+    #hd nav a.on { color: var(--acc); font-weight: 600; background: var(--soft); }
+    .sp { flex: 1; }
+    .ib { background: none; border: 1px solid var(--line); border-radius: 9px; width: 35px; height: 35px; display: inline-flex; align-items: center; justify-content: center; color: var(--mut); position: relative; transition: .18s; }
+    .ib:hover { color: var(--ink); border-color: var(--ink); transform: translateY(-1px); }
+    .ib .n { position: absolute; top: -5px; right: -5px; background: var(--acc); color: #fff; font-size: 9px; font-weight: 700; min-width: 15px; height: 15px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; animation: pulse 1.8s ease-in-out infinite; }
+    .av { width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: var(--bg); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; cursor: pointer; flex-shrink: 0; transition: .2s; }
+    .av:hover { transform: scale(1.1) rotate(6deg); }
+    #view { min-height: calc(100vh - 60px); }
+    .split { display: flex; }
+    .side { width: 212px; border-right: 1px solid var(--line); padding: 28px 14px; flex-shrink: 0; display: flex; flex-direction: column; min-height: calc(100vh - 60px); }
+    .side a { display: flex; gap: 10px; align-items: center; padding: 9px 13px; border-radius: 8px; color: var(--mut); font-size: 14px; cursor: pointer; margin-bottom: 2px; transition: .18s; }
+    .side a.on { background: var(--soft); color: var(--acc); font-weight: 600; }
+    .side a:hover { color: var(--ink); padding-left: 17px; }
+    .side .grow { flex: 1; }
+    .main { flex: 1; padding: 44px 48px; min-width: 0; }
+    h1 { font-size: 29px; letter-spacing: -.03em; font-weight: 700; }
+    h2 { font-size: 12px; letter-spacing: .09em; text-transform: uppercase; color: var(--mut); margin: 34px 0 14px; font-weight: 600; }
+    .lead { color: var(--mut); margin: 6px 0 30px; }
+    .btn { border-radius: 9px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); padding: 9px 18px; font-size: 13.5px; font-weight: 600; transition: .15s; display: inline-flex; gap: 8px; align-items: center; }
+    .btn:hover { opacity: .86; transform: translateY(-1px); }
+    .btn:active { transform: translateY(1px) scale(.98); }
+    .btn.acc { background: var(--acc); border-color: var(--acc); color: #fff; }
+    .btn.ok { background: var(--ok); border-color: var(--ok); color: #fff; }
+    .btn.gh { background: transparent; color: var(--ink); border-color: var(--line); }
+    .btn.gh:hover { border-color: var(--ink); opacity: 1; }
+    .btn.sm { padding: 6px 12px; font-size: 12.5px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; transition: transform .22s ease, box-shadow .22s ease, border-color .22s; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,.08); border-color: color-mix(in srgb, var(--acc) 35%, var(--line)); }
+    .grid { display: grid; gap: 14px; }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    .g2 { grid-template-columns: repeat(2, 1fr); }
+    .pill { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 3px 10px; border-radius: 99px; font-weight: 500; display: inline-block; animation: pop .35s cubic-bezier(.2, .9, .3, 1.3); }
+    .pg { color: var(--ok); background: color-mix(in srgb, var(--ok) 13%, transparent); }
+    .py { color: var(--warn); background: color-mix(in srgb, var(--warn) 13%, transparent); }
+    .pr { color: var(--bad); background: color-mix(in srgb, var(--bad) 11%, transparent); }
+    .pb { color: var(--acc); background: var(--soft); }
+    .pn { color: var(--mut); background: color-mix(in srgb, var(--mut) 13%, transparent); }
+    .pw { color: var(--gold); background: color-mix(in srgb, var(--gold) 15%, transparent); }
+    .pa { color: #fff; background: linear-gradient(135deg, var(--acc), #8B5CF6); background-size: 200% 200%; animation: grad 4s ease infinite; }
+    .star { font-size: 19px; color: var(--line); line-height: 1; display: inline-block; transition: transform .15s; }
+    .star.on { color: var(--gold); }
+    .starrow { display: flex; gap: 3px; }
+    .starrow .star:hover { transform: scale(1.35) rotate(10deg); }
+    .xpbar { height: 5px; border-radius: 99px; background: var(--line); overflow: hidden; margin-top: 6px; }
+    .xpbar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--acc), #8B5CF6); border-radius: 99px; transition: width 1s cubic-bezier(.25, .8, .3, 1); }
+    .rank1 { color: var(--gold); font-weight: 700; }
+    .reviewrow { padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .reviewrow:last-child { border: none; }
+    .chip { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 4px 12px; border-radius: 99px; border: 1px solid var(--line); color: var(--mut); background: none; transition: .18s; }
+    .chip:hover { transform: translateY(-1px); border-color: var(--mut); }
+    .chip.on { border-color: var(--acc); color: var(--acc); background: var(--soft); }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 22px; }
+    input, select, textarea { width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 9px; padding: 10px 14px; font-size: 14px; font-family: inherit; color: var(--ink); transition: border-color .2s, box-shadow .2s; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--acc); box-shadow: 0 0 0 3px var(--soft); }
+    label { font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--mut); display: block; margin: 16px 0 7px; }
+    .tblw { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--mut); text-align: left; font-weight: 600; padding: 11px 16px; border-bottom: 1px solid var(--line); }
+    td { padding: 13px 16px; border-bottom: 1px solid var(--line); font-size: 14px; transition: background .15s; }
+    tr:hover td { background: color-mix(in srgb, var(--acc) 3%, transparent); }
+    tr:last-child td { border: none; }
+    .act { color: var(--acc); font-weight: 600; font-size: 13px; cursor: pointer; }
+    .act:hover { text-decoration: underline; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .stat { background: var(--card); padding: 20px 22px; transition: background .2s; }
+    .stat:hover { background: color-mix(in srgb, var(--acc) 4%, var(--card)); }
+    .stat span { font-size: 10.5px; color: var(--mut); font-family: 'JetBrains Mono', monospace; letter-spacing: .07em; }
+    .stat b { font-size: 30px; font-weight: 700; letter-spacing: -.03em; display: block; margin: 4px 0 2px; }
+    .avsm { width: 24px; height: 24px; border-radius: 50%; background: var(--line); color: var(--ink); display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; vertical-align: middle; margin-right: 6px; }
+    .fade { animation: fd .35s ease; }
+    @keyframes fd { from { opacity: 0; transform: translateY(8px); } }
+    .rise { opacity: 0; animation: rise .5s cubic-bezier(.2, .8, .3, 1) forwards; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    .empty { border: 1px dashed var(--line); border-radius: 12px; padding: 36px; text-align: center; color: var(--mut); }
+    .toast { position: fixed; right: 24px; background: var(--ink); color: var(--bg); padding: 13px 18px; border-radius: 10px; font-size: 13.5px; display: flex; gap: 10px; align-items: center; z-index: 99; animation: tin .3s cubic-bezier(.2, .9, .3, 1.2); max-width: 360px; box-shadow: 0 14px 40px rgba(0,0,0,.28); transition: opacity .4s, transform .4s; }
+    .toast.out { opacity: 0; transform: translateX(30px); }
+    .toast .d { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex-shrink: 0; animation: pulse 1.5s infinite; }
+    @keyframes tin { from { transform: translateX(60px); opacity: 0; } }
+    .ov { position: fixed; inset: 0; background: rgba(0,0,0,.42); backdrop-filter: blur(3px); display: flex; align-items: flex-start; justify-content: center; z-index: 80; padding-top: 12vh; animation: ovin .2s ease; }
+    @keyframes ovin { from { opacity: 0; } }
+    .modal { background: var(--card); border: 1px solid var(--line); border-radius: 14px; width: 600px; max-width: 92vw; max-height: 80vh; overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.3); padding: 24px 26px; animation: min .3s cubic-bezier(.2, .9, .3, 1.15); }
+    @keyframes min { from { opacity: 0; transform: scale(.94) translateY(14px); } }
+    .authbox { max-width: 390px; margin: 11vh auto; padding: 0 24px; }
+    .hero { max-width: 920px; margin: 0 auto; padding: 96px 40px 72px; position: relative; overflow: visible; }
+    .hero h1 { font-size: clamp(36px, 5.6vw, 60px); line-height: 1.06; letter-spacing: -.04em; }
+    .hero h1 em { color: var(--acc); font-style: normal; background: linear-gradient(135deg, var(--acc), #8B5CF6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--mut); font-size: 17.5px; margin: 20px 0 32px; max-width: 560px; }
+    .blob { position: absolute; top: -60px; right: -80px; width: 340px; height: 340px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--acc) 22%, transparent), transparent 70%); filter: blur(10px); animation: float 7s ease-in-out infinite; pointer-events: none; z-index: -1; }
+    @keyframes float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-24px) scale(1.06); } }
+    .tick { display: flex; gap: 22px; margin-top: 18px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mut); flex-wrap: wrap; }
+    .tick b { color: var(--ink); }
+    .tick .dot { display: inline-block; animation: pulse 2s infinite; color: var(--acc); }
+    .feat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border-top: 1px solid var(--line); }
+    .feat>div { background: var(--bg); padding: 38px 34px; transition: background .25s; }
+    .feat>div:hover { background: color-mix(in srgb, var(--acc) 4%, var(--bg)); }
+    .feat .n { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--acc); }
+    .feat b { display: block; font-size: 16.5px; margin: 12px 0 6px; }
+    .feat p { color: var(--mut); font-size: 14px; }
+    .cf { position: fixed; top: -12px; width: 9px; height: 14px; z-index: 98; pointer-events: none; animation: cfall linear forwards; }
+    @keyframes cfall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+    #burger { display: none; }
+    .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 45; animation: ovin .2s; }
+    @media (max-width: 840px) {
+      #burger { display: inline-flex; }
+      .side { position: fixed; left: 0; top: 60px; bottom: 0; z-index: 46; background: var(--bg); transform: translateX(-100%); transition: transform .3s cubic-bezier(.2, .9, .3, 1); box-shadow: 8px 0 30px rgba(0,0,0,.15); }
+      .side.open { transform: none; }
+      .main { padding: 24px 18px; }
+      .g3, .g2 { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      #hd { padding: 0 14px; gap: 10px; }
+      #hd nav { display: none; }
+      .hero { padding: 56px 22px 48px; }
+      .feat { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } .rise { opacity: 1; } }
+  </style>
 </head>
 <body>
 <header id="hd">
+  <button class="ib" id="burger" onclick="toggleDrawer()">☰</button>
   <div class="wm" onclick="go('landing')">dev<i>/</i>hub</div>
   <nav id="nav"></nav>
   <div class="sp"></div>
@@ -115,803 +149,985 @@ tr:last-child td{border:none}
 
 <script>
 "use strict";
-/* ══════════ STORE ══════════ */
-var DB_KEY='devhub_v3';
-var SESSION_KEY='devhub_session';
-function freshDb(){
+const DB_KEY = 'devhub_v4';
+const SESSION_KEY = 'devhub_session';
+
+function freshDb() {
   return {
-    nextId:100,
-    users:[
-      {id:1,name:'Karim Senior',email:'senior@dev.io',pw:'demo1234',role:'senior',xp:340,linkedin:'linkedin.com/in/karim-senior',seniorReq:null},
-      {id:2,name:'Sara Junior',email:'junior@dev.io',pw:'demo1234',role:'junior',xp:150,linkedin:'',seniorReq:null},
-      {id:3,name:'Omar K.',email:'omar@dev.io',pw:'demo1234',role:'junior',xp:40,linkedin:'linkedin.com/in/omar-k',seniorReq:{status:'pending',linkedin:'linkedin.com/in/omar-k',ago:'1D AGO'}},
-      {id:4,name:'Admin',email:'admin@dev.io',pw:'demo1234',role:'admin',xp:0,linkedin:'',seniorReq:null}
+    nextId: 100,
+    users: [
+      { id: 1, name: 'Karim Senior', email: 'senior@dev.io', pw: 'demo1234', role: 'senior', xp: 0, linkedin: 'linkedin.com/in/karim-senior', seniorReq: null },
+      { id: 2, name: 'Sara Junior', email: 'junior@dev.io', pw: 'demo1234', role: 'junior', xp: 0, linkedin: '', seniorReq: null },
+      { id: 3, name: 'Omar K.', email: 'omar@dev.io', pw: 'demo1234', role: 'junior', xp: 0, linkedin: 'linkedin.com/in/omar-k', seniorReq: { status: 'pending', linkedin: 'linkedin.com/in/omar-k', ago: '1D AGO' } },
+      { id: 4, name: 'Admin', email: 'admin@dev.io', pw: 'demo1234', role: 'admin', xp: 0, linkedin: '', seniorReq: null }
     ],
-    projects:[
-      {id:'P-01',senior:1,title:'E-commerce REST API',desc:'A complete store backend: products, cart, orders.',reqs:'- Java · Spring Boot · JPA\n- JWT auth\n- DTO validation\n- Unit tests on services\n- Clean commit history',slots:3,discord:'discord.gg/storeproj'},
-      {id:'P-02',senior:1,title:'Realtime Chat Frontend',desc:'Chat UI with rooms and presence, JS only.',reqs:'- JavaScript · WebSocket\n- Vanilla JS or React (justify choice)\n- Reconnect handling\n- Clean, readable code',slots:2,discord:'discord.gg/chatproj'}
-    ],
-    subs:[
-      {id:1,project:'P-01',junior:2,repo:'https://github.com/sara-dev/ecommerce-api',status:'submitted',feedback:'',ago:'2H AGO',rated:false},
-      {id:2,project:'P-01',junior:3,repo:'',status:'working',feedback:'',ago:'1D AGO',rated:false},
-      {id:3,project:'P-02',junior:2,repo:'https://github.com/sara-dev/chat-frontend',status:'approved',feedback:'Solid reconnect logic and clean event handling. Watch for a small memory leak on unmount — otherwise great work.',ago:'3D AGO',rated:true}
-    ],
-    seniorReviews:[
-      {id:1,senior:1,junior:2,project:'P-02',sub:3,stars:5,comment:'Clear, thorough feedback — explained exactly what to fix and why. Learned a lot.',ago:'3D AGO'}
-    ],
-    notifs:[
-      {id:1,user:1,txt:'Sara Junior submitted a repo for "E-commerce REST API"',kind:'acc',ago:'2H'}
-    ]
+    projects: [],
+    subs: [],
+    seniorReviews: [],
+    notifs: []
   };
 }
-/*
-  Two separate stores on purpose:
-  - db (localStorage, DB_KEY): shared app data — same across every tab/window.
-  - session (sessionStorage, SESSION_KEY): which user THIS tab is signed in as.
-  Keeping "who's logged in" out of the shared db is what stops tabs from
-  stomping on each other's login: sessionStorage is private per tab, so
-  signing in as someone else in another tab never touches this tab, and
-  saving app data from this tab never overwrites another tab's session.
-*/
-function normalizeDb(){
-  if(!db.users.some(function(u){return u.role==='admin'})){
-    db.users.push({id:db.nextId++,name:'Admin',email:'admin@dev.io',pw:'demo1234',role:'admin',xp:0,linkedin:'',seniorReq:null});
-  }
-  if(!db.seniorReviews)db.seniorReviews=[];
-  db.users.forEach(function(u){ if(u.xp==null)u.xp=0; if(u.linkedin==null)u.linkedin=''; if(u.seniorReq===undefined)u.seniorReq=null; });
-  db.subs.forEach(function(s){ if(s.rated==null)s.rated=false; });
-  delete db.session; // legacy field from before sessions were split out — no longer used
-}
-var db;
-try{ db=JSON.parse(localStorage.getItem(DB_KEY)); }catch(e){ db=null; }
-if(!db || !db.users){ db=freshDb(); }
-normalizeDb();
-function save(){ localStorage.setItem(DB_KEY,JSON.stringify(db)); }
-save();
-function resetDemo(){ localStorage.removeItem(DB_KEY); sessionStorage.removeItem(SESSION_KEY); location.reload(); }
-function setSession(uid){ if(uid==null)sessionStorage.removeItem(SESSION_KEY); else sessionStorage.setItem(SESSION_KEY,String(uid)); }
-function getSession(){ var v=sessionStorage.getItem(SESSION_KEY); return v?parseInt(v,10):null; }
 
-/* keep every open tab in sync when data changes elsewhere (another tab
-   subscribing, a senior reviewing, an admin approving, etc.) — each tab's
-   own login is untouched since that lives in sessionStorage, not here */
-window.addEventListener('storage',function(e){
-  if(e.key!==DB_KEY)return;
-  if(!e.newValue){ db=freshDb(); normalizeDb(); render(); return; }
-  try{ db=JSON.parse(e.newValue); }catch(err){ return; }
-  normalizeDb();
-  render();
+function normalizeDb() {
+  if (!db.users.some(u => u.role === 'admin')) {
+    db.users.push({ id: db.nextId++, name: 'Admin', email: 'admin@dev.io', pw: 'demo1234', role: 'admin', xp: 0, linkedin: '', seniorReq: null });
+  }
+  if (!db.seniorReviews) db.seniorReviews = [];
+  db.users.forEach(u => {
+    if (u.xp == null) u.xp = 0;
+    if (u.linkedin == null) u.linkedin = '';
+    if (u.seniorReq === undefined) u.seniorReq = null;
+  });
+  db.subs.forEach(s => { if (s.rated == null) s.rated = false; });
+}
+
+let db;
+try { db = JSON.parse(localStorage.getItem(DB_KEY)); } catch (e) { db = null; }
+if (!db || !db.users) { db = freshDb(); }
+normalizeDb();
+function save() { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+save();
+
+function resetDemo() { localStorage.removeItem(DB_KEY); sessionStorage.removeItem(SESSION_KEY); location.reload(); }
+function setSession(uid) { if (uid == null) sessionStorage.removeItem(SESSION_KEY); else sessionStorage.setItem(SESSION_KEY, String(uid)); }
+function getSession() { const v = sessionStorage.getItem(SESSION_KEY); return v ? parseInt(v, 10) : null; }
+
+window.addEventListener('storage', function(e) {
+  if (e.key !== DB_KEY) return;
+  try { db = JSON.parse(e.newValue); } catch (err) { return; }
+  normalizeDb(); render();
 });
 
-/* helpers */
-function me(){ var id=getSession(); return id?(db.users.find(function(u){return u.id===id})||null):null; }
-function uname(id){ var u=db.users.find(function(u){return u.id===id}); return u?u.name:'—'; }
-function proj(id){ return db.projects.find(function(p){return p.id===id}); }
-function subsOf(pid){ return db.subs.filter(function(s){return s.project===pid}); }
-function $(sel){ return document.querySelector(sel); }
-function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]}); }
-function toast(m){
-  var t=document.createElement('div');t.className='toast';
-  t.innerHTML='<span class="d"></span><span>'+esc(m)+'</span>';
+function me() { const id = getSession(); return id ? (db.users.find(u => u.id === id) || null) : null; }
+function uname(id) { const u = db.users.find(u => u.id === id); return u ? u.name : '—'; }
+function proj(id) { return db.projects.find(p => p.id === id); }
+
+function reqsBadge(p) {
+  if (p.pdf && p.pdf.data) {
+    return '<span class="act mono" onclick="event.stopPropagation();viewPdf(\'' + esc(p.id) + '\')">📄 ' + esc(p.pdf.name) + ' — view requirements ↗</span>';
+  }
+  return '<span class="mono" style="color:var(--mut)">No PDF requirements uploaded</span>';
+}
+function viewPdf(pid) {
+  const p = proj(pid);
+  if (!p || !p.pdf || !p.pdf.data) { toast('No PDF requirements uploaded'); return; }
+  window.open(p.pdf.data, '_blank');
+}
+function subsOf(pid) { return db.subs.filter(s => s.project === pid); }
+function $(sel) { return document.querySelector(sel); }
+function $all(sel) { return Array.from(document.querySelectorAll(sel)); }
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+let toastCount = 0;
+function toast(m) {
+  const t = document.createElement('div'); t.className = 'toast';
+  t.style.bottom = (24 + toastCount * 62) + 'px'; toastCount++;
+  t.innerHTML = '<span class="d"></span><span>' + esc(m) + '</span>';
   document.body.appendChild(t);
-  setTimeout(function(){t.style.opacity='0';t.style.transition='.4s';},2500);
-  setTimeout(function(){t.remove();},3000);
+  setTimeout(() => { t.classList.add('out'); toastCount--; }, 2600);
+  setTimeout(() => t.remove(), 3100);
 }
-function toggleTheme(){ document.documentElement.classList.toggle('dark'); }
-function notify(uid,txt,kind){
-  db.notifs.push({id:db.nextId++,user:uid,txt:txt,kind:kind||'acc',ago:'NOW'});
+
+function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+function toggleDrawer() {
+  const s = $('.side');
+  if (!s) return;
+  const open = s.classList.toggle('open');
+  if (open) {
+    const sc = document.createElement('div'); sc.className = 'scrim'; sc.id = 'scrim';
+    sc.onclick = toggleDrawer; document.body.appendChild(sc);
+  } else { const sc = $('#scrim'); if (sc) sc.remove(); }
 }
-function myNotifs(){ var u=me(); return u?db.notifs.filter(function(n){return n.user===u.id}):[]; }
-function xpOf(u){ return u&&u.xp?u.xp:0; }
-function seniorRating(uid){
-  var r=db.seniorReviews.filter(function(x){return x.senior===uid});
-  if(!r.length)return {avg:0,count:0};
-  var sum=r.reduce(function(a,x){return a+x.stars},0);
-  return {avg:sum/r.length,count:r.length};
+function notify(uid, txt, kind) { db.notifs.push({ id: db.nextId++, user: uid, txt: txt, kind: kind || 'acc', ago: 'NOW' }); }
+function myNotifs() { const u = me(); return u ? db.notifs.filter(n => n.user === u.id) : []; }
+function xpOf(u) { return u && u.xp ? u.xp : 0; }
+function seniorRating(uid) {
+  const r = db.seniorReviews.filter(x => x.senior === uid);
+  if (!r.length) return { avg: 0, count: 0 };
+  return { avg: r.reduce((a, x) => a + x.stars, 0) / r.length, count: r.length };
 }
-function starsRow(n,interactive){
-  var s='<span class="starrow" id="starpick">';
-  for(var i=1;i<=5;i++){
-    s+='<span class="star'+(i<=n?' on':'')+'"'+(interactive?' onclick="pickStar('+i+')" style="cursor:pointer"':'')+'>'+(i<=n?'★':'☆')+'</span>';
+function starsRow(n, interactive) {
+  let s = '<span class="starrow" id="starpick">';
+  for (let i = 1; i <= 5; i++) {
+    s += '<span class="star' + (i <= n ? ' on' : '') + '"' + (interactive ? ' onclick="pickStar(' + i + ')" style="cursor:pointer"' : '') + '>' + (i <= n ? '★' : '☆') + '</span>';
   }
-  return s+'</span>';
+  return s + '</span>';
 }
-function ratingBadge(uid){
-  var r=seniorRating(uid);
-  if(!r.count)return '<span class="pill pn">No reviews yet</span>';
-  return '<span class="pill pw">★ '+r.avg.toFixed(1)+' · '+r.count+' review'+(r.count>1?'s':'')+'</span>';
+function ratingBadge(uid) {
+  const r = seniorRating(uid);
+  if (!r.count) return '<span class="pill pn">No reviews yet</span>';
+  return '<span class="pill pw">★ ' + r.avg.toFixed(1) + ' · ' + r.count + ' review' + (r.count > 1 ? 's' : '') + '</span>';
 }
-function pendingSeniorReqs(){
-  return db.users.filter(function(u){return u.seniorReq&&u.seniorReq.status==='pending'});
-}
+function pendingSeniorReqs() { return db.users.filter(u => u.seniorReq && u.seniorReq.status === 'pending'); }
 
-/* ══════════ ROUTER ══════════ */
-var route='landing';
-function go(r){ route=r; render(); window.scrollTo(0,0); }
-function render(){
-  var u=me(),nav=$('#nav');
-  if(!u){
-    nav.innerHTML='<a class="'+(route==='landing'?'on':'')+'" onclick="go(\'landing\')">Home</a>'
-      +'<a class="'+(route==='projects'?'on':'')+'" onclick="go(\'projects\')">Projects</a>';
-    $('#hdRight').innerHTML='<button class="btn gh sm" onclick="go(\'login\')">Sign in</button> <button class="btn sm" onclick="go(\'register\')">Sign up</button>';
-  }else if(u.role==='admin'){
-    var links=[['admin','Admin panel'],['projects','All projects'],['leaderboard','Leaderboard']];
-    nav.innerHTML=links.map(function(l){
-      return '<a class="'+(route===l[0]?'on':'')+'" onclick="go(\''+l[0]+'\')">'+l[1]+'</a>';
-    }).join('');
-    var pend=pendingSeniorReqs().length;
-    $('#hdRight').innerHTML='<button class="ib" onclick="go(\'admin\')" title="Pending requests">⚑'+(pend?'<span class="n">'+pend+'</span>':'')+'</button>'
-      +'<span class="av pa" onclick="go(\'profile\')" title="'+esc(u.name)+'">'+esc(u.name.charAt(0))+'</span>';
-  }else{
-    var links=u.role==='senior'
-      ?[['dash','Desk'],['projects','All projects'],['myprojects','My projects'],['leaderboard','Leaderboard']]
-      :[['dash','Dashboard'],['projects','Browse projects'],['mysubs','My work'],['leaderboard','Leaderboard']];
-    nav.innerHTML=links.map(function(l){
-      return '<a class="'+(route===l[0]?'on':'')+'" onclick="go(\''+l[0]+'\')">'+l[1]+'</a>';
-    }).join('');
-    var n=myNotifs().length;
-    $('#hdRight').innerHTML='<button class="ib" onclick="go(\'notifications\')">✉'+(n?'<span class="n">'+n+'</span>':'')+'</button>'
-      +'<span class="av" onclick="go(\'profile\')" title="'+esc(u.name)+'">'+esc(u.name.charAt(0))+'</span>';
-  }
-  var v=$('#view');
-  v.className='fade';
-  var view=VIEWS[route]||VIEWS.landing;
-  v.innerHTML=view();
-  if(route==='projects'){ drawProjects(); }
-}
-
-/* ══════════ VIEWS ══════════ */
-var VIEWS={};
-
-/* ---- landing ---- */
-VIEWS.landing=function(){
-  var u=me();
-  return '<div class="hero">'
-  +'<span class="pill pb">LEARN BY BUILDING · v1.0</span>'
-  +'<h1 style="margin-top:22px">Real projects.<br>Real <em>review</em>. Real growth.</h1>'
-  +'<p>Seniors post real projects with clear requirements. Juniors subscribe, build in their own GitHub repo, and get a full code review when they ship. Free work for seniors, real experience for juniors.</p>'
-  +(u
-    ?'<button class="btn acc" style="padding:13px 26px" onclick="go(\'dash\')">Open dashboard →</button>'
-    :'<button class="btn acc" style="padding:13px 26px" onclick="go(\'register\')">Join now →</button> '
-     +'<button class="btn gh" style="padding:13px 26px" onclick="go(\'login\')">Sign in</button>')
-  +'<div class="tick">'
-  +'<span>● <b>'+db.projects.length+'</b> projects</span>'
-  +'<span>● <b>'+db.users.filter(function(x){return x.role==='junior'}).length+'</b> juniors building</span>'
-  +'<span>● <b>'+db.subs.filter(function(s){return s.status==='submitted'}).length+'</b> waiting review</span>'
-  +'</div></div>'
-  +'<div class="feat">'
-  +'<div><span class="n">01</span><b>Senior posts a project</b><p>Requirements, stack, max juniors, and a Discord channel for questions and the final review.</p></div>'
-  +'<div><span class="n">02</span><b>Junior builds it</b><p>Subscribe, create your own GitHub repo, ask questions on Discord, then submit your repo link.</p></div>'
-  +'<div><span class="n">03</span><b>Review &amp; verdict</b><p>The senior reviews the code: approved, or changes requested with real feedback. Learning by doing.</p></div>'
-  +'</div>';
-};
-
-/* ---- auth ---- */
-VIEWS.login=function(){
-  return '<div class="authbox"><h1 style="font-size:25px;margin:34px 0 4px">Sign in</h1><p class="lead">Welcome back.</p>'
-  +'<label>Email</label><input id="le" placeholder="senior@dev.io">'
-  +'<label>Password</label><input id="lp" type="password" onkeydown="if(event.key===\'Enter\')doLogin()">'
-  +'<div id="lerr"></div>'
-  +'<button class="btn" style="width:100%;margin-top:22px" onclick="doLogin()">Sign in</button>'
-  +'<p style="text-align:center;margin-top:20px;font-size:13px;color:var(--mut)">No account? <span class="act" onclick="go(\'register\')">Create one</span></p>'
-  +'<div class="card mono" style="margin-top:22px;font-size:11px;color:var(--mut)">DEMO — senior@dev.io / junior@dev.io / admin@dev.io<br>PASSWORD: demo1234'
-  +'<div style="margin-top:8px"><span class="act" onclick="resetDemo()">↺ Reset demo data</span></div></div></div>';
-};
-VIEWS.register=function(){
-  return '<div class="authbox"><h1 style="font-size:25px">Create account</h1><p class="lead">No GitHub auth needed — you bring your own repo.</p>'
-  +'<label>Full name</label><input id="rn">'
-  +'<label>Email</label><input id="re" type="email">'
-  +'<label>Password (min 8)</label><input id="rp" type="password">'
-  +'<div id="rerr"></div>'
-  +'<button class="btn" style="width:100%;margin-top:20px" onclick="doRegister()">Create account</button>'
-  +'<p style="text-align:center;margin-top:16px;font-size:13px;color:var(--mut)">Have an account? <span class="act" onclick="go(\'login\')">Sign in</span></p>'
-  +'<div class="card mono" style="margin-top:22px;font-size:11px;color:var(--mut)">Everyone starts as a junior. Want to post projects? Request senior status from your profile once you\'re in — an admin reviews your LinkedIn before approving.</div></div>';
-};
-function doLogin(){
-  var e=$('#le').value.trim().toLowerCase(),p=$('#lp').value;
-  var u=db.users.find(function(x){return x.email.toLowerCase()===e&&x.pw===p});
-  if(!u){
-    $('#lerr').innerHTML='<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Wrong credentials. Try <b>senior@dev.io</b> or <b>junior@dev.io</b> / <b>demo1234</b></div>';
-    return;
-  }
-  setSession(u.id);save();toast('Signed in as '+u.name+' ('+u.role+')');go(u.role==='admin'?'admin':'dash');
-}
-function doRegister(){
-  var n=$('#rn').value.trim(),e=$('#re').value.trim().toLowerCase(),p=$('#rp').value;
-  if(!n||!e||p.length<8){
-    $('#rerr').innerHTML='<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">All fields required · password ≥ 8 chars</div>';
-    return;
-  }
-  var exists=db.users.some(function(x){return x.email.toLowerCase()===e});
-  if(exists){
-    $('#rerr').innerHTML='<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Email already registered</div>';
-    return;
-  }
-  var u={id:db.nextId++,name:n,email:e,pw:p,role:'junior',xp:0,linkedin:'',seniorReq:null};
-  db.users.push(u);setSession(u.id);save();
-  toast('Welcome, '+n);go('dash');
-}
-function logout(){ setSession(null);pFilter='all';go('landing');toast('Signed out'); }
-
-/* ---- shell ---- */
-function shell(inner){
-  var u=me();
-  if(!u){
-    return '<div class="main" style="max-width:1100px;margin:0 auto">'+inner+'</div>';
-  }
-  return '<div class="split"><div class="side">'+sideLinks()+'</div><div class="main">'+inner+'</div></div>';
-}
-function sideLinks(){
-  var u=me();
-  if(!u)return '';
-  var a=u.role==='admin'
-    ?[['admin','⚑ Admin panel'],['projects','▤ All projects'],['leaderboard','↑ Leaderboard']]
-    :u.role==='senior'
-    ?[['dash','◧ Desk'],['projects','▤ All projects'],['myprojects','✦ My projects'],['leaderboard','↑ Leaderboard']]
-    :[['dash','⌂ Dashboard'],['projects','▤ Browse projects'],['mysubs','≡ My work'],['leaderboard','↑ Leaderboard']];
-  a.push(['profile','◎ Profile']);
-  return a.map(function(l){
-    return '<a class="'+(route===l[0]?'on':'')+'" onclick="go(\''+l[0]+'\')">'+l[1]+'</a>';
-  }).join('')
-  +'<div class="grow"></div><a onclick="logout()" style="color:var(--bad)">⏻ Sign out</a>';
-}
-
-/* ---- shared: status pill + sub card ---- */
-function subPill(st){
-  var map={
-    working:'<span class="pill pb">working</span>',
-    submitted:'<span class="pill py">submitted</span>',
-    approved:'<span class="pill pg">approved</span>',
-    changes:'<span class="pill pr">changes needed</span>'
-  };
-  return map[st]||'';
-}
-function subCard(s,isSenior){
-  var p=proj(s.project);
-  if(!p)return '';
-  return '<div class="card" style="margin-bottom:12px">'
-  +'<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">'
-  +'<b>'+esc(p.title)+'</b>'+subPill(s.status)
-  +'<span class="mono" style="color:var(--mut)">'+esc(s.ago)+'</span>'
-  +'<div style="flex:1"></div>'
-  +(isSenior&&s.status==='submitted'?'<button class="btn ok sm" onclick="reviewSub('+s.id+')">Review submission →</button>':'')
-  +(isSenior&&s.repo?'<span class="act mono" onclick="toast(\'Repo: '+esc(s.repo)+'\')">repo ↗</span>':'')
-  +'</div>'
-  +(s.feedback?'<div class="card" style="margin-top:12px;border-left:3px solid var(--acc);font-size:13.5px"><b style="font-size:11px;letter-spacing:.07em;color:var(--mut)">SENIOR FEEDBACK</b><br>'+esc(s.feedback)+'</div>':'')
-  +(s.status==='changes'&&!isSenior?'<button class="btn sm" style="margin-top:12px" onclick="resubmit('+s.id+')">Re-submit after changes</button>':'')
-  +(!isSenior&&(s.status==='approved'||s.status==='changes')&&!s.rated
-    ?'<button class="btn gh sm" style="margin-top:12px" onclick="openRateModal('+s.id+')">★ Rate this review</button>':'')
-  +'</div>';
-}
-
-/* ---- dashboards ---- */
-VIEWS.dash=function(){
-  var u=me();
-  if(!u)return VIEWS.login();
-  if(u.role==='senior'){
-    var mine=db.projects.filter(function(p){return p.senior===u.id});
-    var mineIds=mine.map(function(p){return p.id});
-    var waiting=db.subs.filter(function(s){return s.status==='submitted'&&mineIds.indexOf(s.project)>=0});
-    var totalSubs=db.subs.filter(function(s){return mineIds.indexOf(s.project)>=0}).length;
-    var approved=db.subs.filter(function(s){return s.status==='approved'&&mineIds.indexOf(s.project)>=0}).length;
-    return shell('<h1>Senior desk</h1><p class="lead">Your projects, your juniors, your free dev time.</p>'
-    +'<div class="stats">'
-    +'<div class="stat"><span>MY PROJECTS</span><b>'+mine.length+'</b></div>'
-    +'<div class="stat"><span>SUBSCRIBED JUNIORS</span><b>'+totalSubs+'</b></div>'
-    +'<div class="stat"><span>AWAITING REVIEW</span><b style="color:'+(waiting.length?'var(--warn)':'var(--ink)')+'">'+waiting.length+'</b></div>'
-    +'<div class="stat"><span>APPROVED</span><b style="color:var(--ok)">'+approved+'</b></div>'
-    +'</div>'
-    +(waiting.length?'<h2>Submissions to review</h2>'+waiting.map(function(s){return subCard(s,true)}).join(''):'')
-    +'<h2>Quick action</h2><div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">'
-    +'<div style="flex:1;min-width:200px"><b>Post a new project</b><div class="mono" style="color:var(--mut)">SET REQUIREMENTS · SLOTS · DISCORD CHANNEL</div></div>'
-    +'<button class="btn acc sm" onclick="go(\'newproject\')">+ New project</button></div>');
-  }
-  var mine=db.subs.filter(function(s){return s.junior===u.id});
-  var working=mine.filter(function(s){return s.status==='working'});
-  var submitted=mine.filter(function(s){return s.status==='submitted'});
-  var changes=mine.filter(function(s){return s.status==='changes'});
-  var done=mine.filter(function(s){return s.status==='approved'});
-  return shell('<h1>Hey, '+esc(u.name.split(' ')[0])+'</h1><p class="lead">Pick a project, build it, ship it, get reviewed.</p>'
-  +'<div class="stats">'
-  +'<div class="stat"><span>WORKING ON</span><b>'+working.length+'</b></div>'
-  +'<div class="stat"><span>SUBMITTED</span><b>'+submitted.length+'</b></div>'
-  +'<div class="stat"><span>CHANGES NEEDED</span><b style="color:'+(changes.length?'var(--bad)':'var(--ink)')+'">'+changes.length+'</b></div>'
-  +'<div class="stat"><span>APPROVED</span><b style="color:var(--ok)">'+done.length+'</b></div>'
-  +'</div>'
-  +(mine.length?'<h2>Your active work</h2>'+mine.map(function(s){return subCard(s,false)}).join(''):'')
-  +'<h2>Find a project</h2><div class="grid g3">'
-  +db.projects.slice(0,3).map(function(p){
-    return '<div class="card"><b style="display:block;margin-bottom:8px">'+esc(p.title)+'</b>'
-    +'<div class="mono" style="color:var(--mut)">'+subsOf(p.id).length+'/'+p.slots+' SLOTS TAKEN</div>'
-    +'<span class="act" onclick="openProject(\''+p.id+'\')">View →</span></div>';
-  }).join('')
-  +'</div>');
-};
-
-/* ---- projects browse ---- */
-var pFilter='all',pQuery='';
-VIEWS.projects=function(){
-  var u=me();
-  var filters=u?['all','open','full','mine']:['all','open','full'];
-  return shell('<h1>Projects</h1><p class="lead">Posted by seniors · subscribe, build, submit your repo.</p>'
-  +'<div style="margin-bottom:6px"><input placeholder="Search projects…" oninput="pQuery=this.value;drawProjects()"></div>'
-  +'<div class="chips">'+filters.map(function(d){
-    return '<button class="chip'+(pFilter===d?' on':'')+'" onclick="pFilter=\''+d+'\';render()">'+d+'</button>';
-  }).join('')+'</div>'
- +'<div id="pgrid"></div>');
-};
-function drawProjects(){
-  var el=$('#pgrid');if(!el)return;
-  var u=me();
-  var list=db.projects.filter(function(p){
-    if(pQuery&&p.title.toLowerCase().indexOf(pQuery.toLowerCase())<0)return false;
-    var full=subsOf(p.id).length>=p.slots;
-    if(pFilter==='open')return !full;
-    if(pFilter==='full')return full;
-    if(pFilter==='mine')return u?subsOf(p.id).some(function(s){return s.junior===u.id}):false;
-    return true;
+function fx() {
+  $all('.grid, .feat, .stats').forEach(g => {
+    Array.from(g.children).forEach((c, i) => {
+      c.classList.add('rise');
+      c.style.animationDelay = (i * 70) + 'ms';
+    });
   });
-  if(!list.length){ el.innerHTML='<div class="empty">No projects match.</div>'; return; }
-  el.innerHTML='<div class="grid g3">'+list.map(function(p){
-    var cnt=subsOf(p.id).length,full=cnt>=p.slots;
-    return '<div class="card">'
-    +'<div class="mono" style="color:var(--mut)">BY '+esc(uname(p.senior)).toUpperCase()+'</div>'
-    +'<b style="display:block;margin:10px 0 6px;font-size:16px">'+esc(p.title)+'</b>'
-    +'<p style="font-size:13px;color:var(--mut);margin-bottom:10px">'+esc(p.desc)+'</p>'
-    +'<div style="margin-bottom:12px">'+ratingBadge(p.senior)+'</div>'
-    +'<div style="display:flex;justify-content:space-between;align-items:center">'
-    +'<span class="pill '+(full?'py':'pg')+'">'+cnt+'/'+p.slots+' slots</span>'
-    +'<span class="act" onclick="openProject(\''+p.id+'\')">View →</span>'
-    +'</div></div>';
-  }).join('')+'</div>';
+  $all('[data-count]').forEach(el => {
+    const target = +el.getAttribute('data-count'), dur = 800;
+    if (el._counted) return; el._counted = true;
+    let start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / dur, 1), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * e);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+  requestAnimationFrame(() => {
+    $all('.xpbar i').forEach(b => { b.style.width = b.getAttribute('data-w'); });
+  });
 }
 
-/* ---- project modal ---- */
-function openProject(id){
-  var p=proj(id);if(!p)return;
-  var u=me();
-  var cnt=subsOf(p.id).length,full=cnt>=p.slots;
-  var mySub=u?subsOf(p.id).find(function(s){return s.junior===u.id}):null;
-  var isOwner=u&&u.id===p.senior;
-  var sr=db.users.find(function(x){return x.id===p.senior});
-  var html='<div class="mono" style="color:var(--mut)">'+esc(p.id)+' · POSTED BY '+esc(uname(p.senior)).toUpperCase()+'</div>'
-  +'<h1 style="font-size:22px;margin:8px 0 6px">'+esc(p.title)+'</h1>'
-  +'<div class="card" style="display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap">'
-  +'<span class="avsm" style="width:30px;height:30px;font-size:11px">'+esc(uname(p.senior).charAt(0))+'</span>'
-  +'<div><b style="font-size:13.5px">'+esc(uname(p.senior))+'</b>'
-  +'<div class="mono" style="color:var(--mut);font-size:10.5px">'+xpOf(sr)+' XP</div></div>'
-  +'<div style="flex:1"></div>'+ratingBadge(p.senior)+'</div>'
-  +'<div style="margin-bottom:14px"><span class="pill '+(full?'py':'pg')+'">'+cnt+'/'+p.slots+' slots</span> <span class="pill pb">disc: '+esc(p.discord)+'</span></div>'
-  +'<p style="color:var(--mut)">'+esc(p.desc)+'</p>'
-  +'<h2 style="margin:22px 0 8px">Requirements</h2>'
-  +'<div class="card mono" style="white-space:pre-wrap;font-size:12.5;line-height:1.9">'+esc(p.reqs)+'</div>'
-  +'<h2 style="margin:22px 0 8px">Communication</h2>'
-  +'<div class="card" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span>💬 Questions &amp; final review happen on Discord</span>'
-  +'<div style="flex:1"></div><button class="btn gh sm" onclick="toast(\'Opening Discord… (demo)\')">'+esc(p.discord)+' ↗</button></div>';
-  if(isOwner){
-    html+='<h2 style="margin:22px 0 8px">Your juniors ('+cnt+')</h2>';
-    html+=cnt?subsOf(p.id).map(function(s){
-      return '<div class="card" style="margin-bottom:8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">'
-      +'<span class="avsm">'+esc(uname(s.junior).charAt(0))+'</span><b>'+esc(uname(s.junior))+'</b>'
-      +'<div style="flex:1"></div>'+subPill(s.status)
-      +(s.status==='submitted'?' <button class="btn ok sm" onclick="reviewSub('+s.id+')">Review →</button>':'')
-      +'</div>';
-    }).join(''):'<div class="empty">No subscribers yet.</div>';
-  }else if(u){
-    html+='<div style="margin-top:22px">';
-    if(mySub){
-      html+='<div class="card" style="border-left:3px solid var(--acc)"><b>You are subscribed</b> '+subPill(mySub.status);
-      if(mySub.status==='working'||mySub.status==='changes'){
-       html+='<div style="margin-top:14px">'
-          +'<label>Your GitHub repo link</label>'
-          +'<input id="subrepo" placeholder="https://github.com/you/repo" value="'+esc(mySub.repo)+'">'
-          +'<button class="btn acc sm" style="margin-top:12px" onclick="submitRepo('+mySub.id+')">Submit for review →</button>';
-        if(mySub.feedback){
-          html+='<div class="card" style="margin-top:12px;border-left:3px solid var(--acc);font-size:13.5px">'
-            +'<b style="font-size:11px;letter-spacing:.07em;color:var(--mut)">SENIOR FEEDBACK</b><br>'+esc(mySub.feedback)+'</div>';
-        }
-        html+='</div>';
-      }
-      html+='</div>';
-    }else if(full){
-      html+='<div class="card" style="text-align:center;color:var(--mut)">Project is full — '+cnt+'/'+p.slots+' juniors subscribed.</div>';
-    }else{
-      html+='<button class="btn acc" style="width:100%" onclick="subscribe(\''+p.id+'\')">Subscribe to this project ('+cnt+'/'+p.slots+')</button>'
-      +'<div class="mono" style="color:var(--mut);text-align:center;margin-top:10px">THEN CREATE YOUR OWN GITHUB REPO AND BUILD IT</div>';
-    }
-    html+='</div>';
-  }else{
-    html+='<div class="card" style="text-align:center;margin-top:20px">'
-      +'<div class="mono" style="color:var(--mut);margin-bottom:10px">'+cnt+'/'+p.slots+' slots taken</div>'
-      +'<div style="color:var(--mut);font-size:13.5px;margin-bottom:14px">Sign in to subscribe and start building this project.</div>'
-      +'<button class="btn acc sm" onclick="closeModal();go(\'login\')">Sign in</button> '
-      +'<button class="btn gh sm" onclick="closeModal();go(\'register\')">Create account</button>'
-      +'</div>';
+function confetti() {
+  const colors = ['#2E5BFF', '#8B5CF6', '#1E9E5A', '#E8B23D', '#D64545'];
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement('div'); c.className = 'cf';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[i % colors.length];
+    c.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+    c.style.animationDuration = (2 + Math.random() * 2) + 's';
+    c.style.animationDelay = (Math.random() * .4) + 's';
+    document.body.appendChild(c);
+    setTimeout(cc => cc.remove(), 4500);
   }
-  html+='<div style="margin-top:18px;text-align:right"><button class="btn" onclick="closeModal()">Close</button></div>';
+}
+
+let route = 'landing';
+function go(r) { if (r !== 'profile') profileEditing = false; route = r; closeDrawerIfOpen(); render(); window.scrollTo(0, 0); }
+function closeDrawerIfOpen() {
+  const s = $('.side'); if (s) s.classList.remove('open');
+  const sc = $('#scrim'); if (sc) sc.remove();
+}
+
+function render() {
+  const u = me(), nav = $('#nav');
+  if (!u) {
+    nav.innerHTML = '<a class="' + (route === 'landing' ? 'on' : '') + '" onclick="go(\'landing\')">Home</a>' +
+      '<a class="' + (route === 'projects' ? 'on' : '') + '" onclick="go(\'projects\')">Projects</a>';
+    $('#hdRight').innerHTML = '<button class="btn gh sm" onclick="go(\'login\')">Sign in</button> <button class="btn sm" onclick="go(\'register\')">Sign up</button>';
+  } else if (u.role === 'admin') {
+    const links = [['admin', 'Admin panel'], ['projects', 'All projects'], ['leaderboard', 'Leaderboard']];
+    nav.innerHTML = links.map(l => '<a class="' + (route === l[0] ? 'on' : '') + '" onclick="go(\'' + l[0] + '\')">' + l[1] + '</a>').join('');
+    const pend = pendingSeniorReqs().length;
+    $('#hdRight').innerHTML = '<button class="ib" onclick="go(\'admin\')" title="Pending requests">⚑' + (pend ? '<span class="n">' + pend + '</span>' : '') + '</button>' +
+      '<span class="av pa" onclick="go(\'profile\')" title="' + esc(u.name) + '">' + esc(u.name.charAt(0)) + '</span>';
+  } else {
+    const links = u.role === 'senior' ?
+      [['dash', 'Desk'], ['projects', 'All projects'], ['myprojects', 'My projects'], ['leaderboard', 'Leaderboard']] :
+      [['dash', 'Dashboard'], ['projects', 'Browse projects'], ['mysubs', 'My work'], ['leaderboard', 'Leaderboard']];
+    nav.innerHTML = links.map(l => '<a class="' + (route === l[0] ? 'on' : '') + '" onclick="go(\'' + l[0] + '\')">' + l[1] + '</a>').join('');
+    const n = myNotifs().length;
+    $('#hdRight').innerHTML = '<button class="ib" onclick="go(\'notifications\')">✉' + (n ? '<span class="n">' + n + '</span>' : '') + '</button>' +
+      '<span class="av" onclick="go(\'profile\')" title="' + esc(u.name) + '">' + esc(u.name.charAt(0)) + '</span>';
+  }
+  const v = $('#view');
+  v.className = 'fade';
+  const view = VIEWS[route] || VIEWS.landing;
+  v.innerHTML = view();
+  if (route === 'projects') { drawProjects(); }
+  fx();
+}
+
+const VIEWS = {};
+
+VIEWS.landing = function() {
+  const u = me();
+  return '<div class="hero">' +
+    '<div class="blob"></div>' +
+    '<span class="pill pb">LEARN BY BUILDING · v2.0</span>' +
+    '<h1 style="margin-top:22px" class="rise">Real projects.<br>Real <em>review</em>. Real growth.</h1>' +
+    '<p class="rise" style="animation-delay:.1s">Seniors post real projects with clear requirements. Juniors subscribe, build in their own GitHub repo, and get a full code review when they ship. Free work for seniors, real experience for juniors.</p>' +
+    '<div class="rise" style="animation-delay:.2s">' +
+    (u ?
+      '<button class="btn acc" style="padding:13px 26px" onclick="go(\'dash\')">Open dashboard →</button>' :
+      '<button class="btn acc" style="padding:13px 26px" onclick="go(\'register\')">Join now →</button> ' +
+      '<button class="btn gh" style="padding:13px 26px" onclick="go(\'login\')">Sign in</button>') +
+    '</div>' +
+    '<div class="tick rise" style="animation-delay:.3s">' +
+    '<span><span class="dot">●</span> <b data-count="' + db.projects.length + '">' + db.projects.length + '</b> projects</span>' +
+    '<span><span class="dot">●</span> <b data-count="' + db.users.filter(x => x.role === 'junior').length + '">' + db.users.filter(x => x.role === 'junior').length + '</b> juniors building</span>' +
+    '<span><span class="dot">●</span> <b data-count="' + db.subs.filter(s => s.status === 'submitted').length + '">' + db.subs.filter(s => s.status === 'submitted').length + '</b> waiting review</span>' +
+    '</div></div>' +
+    '<div class="feat">' +
+    '<div><span class="n">01</span><b>Senior posts a project</b><p>Requirements, stack, max juniors, and a Discord channel for questions and the final review.</p></div>' +
+    '<div><span class="n">02</span><b>Junior builds it</b><p>Subscribe, create your own GitHub repo, ask questions on Discord, then submit your repo link.</p></div>' +
+    '<div><span class="n">03</span><b>Review &amp; verdict</b><p>The senior reviews the code: approved, or changes requested with real feedback. Learning by doing.</p></div>' +
+    '</div>';
+};
+
+VIEWS.login = function() {
+  return '<div class="authbox"><h1 style="font-size:25px;margin:34px 0 4px">Sign in</h1><p class="lead">Welcome back.</p>' +
+    '<label>Email</label><input id="le" placeholder="senior@dev.io">' +
+    '<label>Password</label><input id="lp" type="password" onkeydown="if(event.key===\'Enter\')doLogin()">' +
+    '<div id="lerr"></div>' +
+    '<button class="btn" style="width:100%;margin-top:22px" onclick="doLogin()">Sign in →</button>' +
+    '<p class="lead" style="text-align:center;margin-top:18px;font-size:13.5px">No account? <span class="act" onclick="go(\'register\')">Create one</span></p>' +
+    '<div class="card" style="margin-top:26px;background:var(--soft);border:none;font-size:12.5px;line-height:2">' +
+    '<b class="mono" style="font-size:10.5px;letter-spacing:.07em">DEMO ACCOUNTS · PASSWORD: demo1234</b><br>' +
+    'senior@dev.io — post projects, review juniors<br>' +
+    'junior@dev.io — subscribe, build, submit<br>' +
+    'admin@dev.io — approve senior requests</div></div>';
+};
+
+function doLogin() {
+  const e = document.getElementById('le').value.trim().toLowerCase(), p = document.getElementById('lp').value;
+  const u = db.users.find(x => x.email.toLowerCase() === e && x.pw === p);
+  if (!u) {
+    document.getElementById('lerr').innerHTML = '<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Wrong credentials. Try <b>senior@dev.io</b> or <b>junior@dev.io</b> / <b>demo1234</b></div>';
+    return;
+  }
+  setSession(u.id); save(); toast('Signed in as ' + u.name + ' (' + u.role + ')'); go(u.role === 'admin' ? 'admin' : 'dash');
+}
+
+VIEWS.register = function() {
+  return '<div class="authbox"><h1 style="font-size:25px;margin:34px 0 4px">Create account</h1><p class="lead">Start building today.</p>' +
+    '<label>Name</label><input id="rn" placeholder="Your name">' +
+    '<label>Email</label><input id="re" placeholder="you@example.com">' +
+    '<label>Password (min 8 characters)</label><input id="rp" type="password" onkeydown="if(event.key===\'Enter\')doRegister()">' +
+    '<div id="rerr"></div>' +
+    '<button class="btn" style="width:100%;margin-top:22px" onclick="doRegister()">Create account →</button>' +
+    '<p class="lead" style="text-align:center;margin-top:18px;font-size:13.5px">Already have one? <span class="act" onclick="go(\'login\')">Sign in</span></p></div>';
+};
+
+function doRegister() {
+  const n = document.getElementById('rn').value.trim(), e = document.getElementById('re').value.trim().toLowerCase(), p = document.getElementById('rp').value;
+  if (!n || !e || p.length < 8) {
+    document.getElementById('rerr').innerHTML = '<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">All fields required · password ≥ 8 chars</div>';
+    return;
+  }
+  if (db.users.some(x => x.email.toLowerCase() === e)) {
+    document.getElementById('rerr').innerHTML = '<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Email already registered</div>';
+    return;
+  }
+  const u = { id: db.nextId++, name: n, email: e, pw: p, role: 'junior', xp: 0, linkedin: '', seniorReq: null };
+  db.users.push(u); setSession(u.id); save();
+  toast('Welcome, ' + n); go('dash');
+}
+
+function logout() { setSession(null); closeDrawerIfOpen(); go('landing'); toast('Signed out'); }
+
+function shell(inner) {
+  const u = me();
+  if (!u) return '<div class="main" style="max-width:1100px;margin:0 auto">' + inner + '</div>';
+  return '<div class="split"><div class="side">' + sideLinks() + '</div><div class="main">' + inner + '</div></div>';
+}
+function sideLinks() {
+  const u = me();
+  if (!u) return '';
+  const a = u.role === 'admin' ?
+    [['admin', '⚑ Admin panel'], ['projects', '▤ All projects'], ['leaderboard', '↑ Leaderboard']] :
+    u.role === 'senior' ?
+      [['dash', '◧ Desk'], ['projects', '▤ All projects'], ['myprojects', '✦ My projects'], ['leaderboard', '↑ Leaderboard']] :
+      [['dash', '⌂ Dashboard'], ['projects', '▤ Browse projects'], ['mysubs', '≡ My work'], ['leaderboard', '↑ Leaderboard']];
+  a.push(['profile', '◎ Profile']);
+  return a.map(l => '<a class="' + (route === l[0] ? 'on' : '') + '" onclick="go(\'' + l[0] + '\')">' + l[1] + '</a>').join('') +
+    '<div class="grow"></div><a onclick="logout()" style="color:var(--bad)">⏻ Sign out</a>';
+}
+
+function subPill(st) {
+  const map = {
+    working: '<span class="pill pb">working</span>',
+    submitted: '<span class="pill py">submitted</span>',
+    approved: '<span class="pill pg">approved</span>',
+    changes: '<span class="pill pr">changes needed</span>'
+  };
+  return map[st] || '';
+}
+
+function subCard(s, isSenior) {
+  const p = proj(s.project);
+  if (!p) return '';
+  return '<div class="card" style="margin-bottom:12px;cursor:pointer" onclick="openSubDetail(' + s.id + ')">' +
+    '<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">' +
+    '<b>' + esc(p.title) + '</b>' + subPill(s.status) +
+    '<span class="mono" style="color:var(--mut)">' + esc(s.ago) + '</span>' +
+    '<div style="flex:1"></div>' +
+    '<span class="act">View details →</span>' +
+    (!isSenior && s.status === 'working' ? '<button class="btn acc sm" onclick="event.stopPropagation();openSubDetail(' + s.id + ')">Submit for review →</button>' : '') +
+    (isSenior && s.status === 'submitted' ? '<button class="btn ok sm" onclick="event.stopPropagation();reviewSub(' + s.id + ')">Review submission →</button>' : '') +
+    (isSenior && s.repo ? '<span class="act mono" onclick="event.stopPropagation();toast(\'Repo: ' + esc(s.repo) + '\')">repo ↗</span>' : '') +
+    '</div>' +
+    (s.feedback ? '<div class="card" style="margin-top:12px;border-left:3px solid var(--acc);font-size:13.5px"><b style="font-size:11px;letter-spacing:.07em;color:var(--mut)">SENIOR FEEDBACK</b><br>' + esc(s.feedback) + '</div>' : '') +
+    (s.status === 'changes' && !isSenior ? '<button class="btn sm" style="margin-top:12px" onclick="event.stopPropagation();resubmit(' + s.id + ')">Re-submit after changes</button>' : '') +
+    (!isSenior && (s.status === 'approved' || s.status === 'changes') && !s.rated ?
+      '<button class="btn gh sm" style="margin-top:12px" onclick="event.stopPropagation();openRateModal(' + s.id + ')">★ Rate this review</button>' : '') +
+    '</div>';
+}
+
+function openSubDetail(sid) {
+  const s = db.subs.find(x => x.id === sid);
+  if (!s) return;
+  const p = proj(s.project);
+  if (!p) return;
+  const u = me();
+  const isSenior = u && u.id === p.senior;
+  let html = '<div class="mono" style="color:var(--mut)">' + esc(p.id) + ' · ' + esc(s.ago) + '</div>' +
+    '<h1 style="font-size:21px;margin:8px 0 4px">' + esc(p.title) + '</h1>' +
+    '<div style="margin-bottom:14px">' + subPill(s.status) + '</div>' +
+    '<p style="color:var(--mut);margin-bottom:14px">' + esc(p.desc) + '</p>' +
+    '<h2 style="margin:18px 0 8px">Requirements</h2>' +
+    '<div class="card">' + reqsBadge(p) + '</div>' +
+    '<h2 style="margin:18px 0 8px">' + (isSenior ? esc(uname(s.junior)) + '\'s submission' : 'Your submission') + '</h2>' +
+    '<div class="card mono" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><span>📦</span>' +
+    '<span style="word-break:break-all">' + esc(s.repo || 'No repo submitted yet') + '</span>' +
+    (s.repo ? '<div style="flex:1"></div><button class="btn gh sm" onclick="toast(\'Opening repo… (demo)\')">Open ↗</button>' : '') +
+    '</div>';
+  if (!isSenior && s.status === 'working') {
+    html += '<div style="margin-top:14px">' +
+      '<label>Your GitHub repo link</label>' +
+      '<input id="subrepo" placeholder="https://github.com/you/repo" value="' + esc(s.repo) + '">' +
+      '<button class="btn acc sm" style="margin-top:12px" onclick="submitRepo(' + s.id + ')">Submit for review →</button>' +
+      '</div>';
+  }
+  if (s.feedback) {
+    html += '<h2 style="margin:18px 0 8px">Senior feedback</h2>' +
+      '<div class="card" style="border-left:3px solid var(--acc);font-size:13.5px">' + esc(s.feedback) + '</div>';
+  }
+  if (isSenior && s.status === 'submitted') {
+    html += '<div style="margin-top:16px"><button class="btn ok sm" onclick="closeModal();reviewSub(' + s.id + ')">Review submission →</button></div>';
+  }
+  if (!isSenior && s.status === 'changes') {
+    html += '<div style="margin-top:16px"><button class="btn acc sm" onclick="closeModal();resubmit(' + s.id + ')">Re-submit after changes</button></div>';
+  }
+  if (!isSenior && (s.status === 'approved' || s.status === 'changes') && !s.rated) {
+    html += '<div style="margin-top:16px"><button class="btn gh sm" onclick="closeModal();openRateModal(' + s.id + ')">★ Rate this review</button></div>';
+  }
+  html += '<div style="margin-top:18px;text-align:right"><button class="btn" onclick="closeModal()">Close</button></div>';
   modal(html);
 }
 
-/* ---- subscribe / submit / review ---- */
-function subscribe(pid){
-  var u=me(),p=proj(pid);
-  if(!u||!p)return;
-  if(subsOf(pid).length>=p.slots){ toast('Project is full'); return; }
-  db.subs.push({id:db.nextId++,project:pid,junior:u.id,repo:'',status:'working',feedback:'',ago:'JUST NOW'});
-  notify(p.senior,u.name+' subscribed to "'+p.title+'"','acc');
+VIEWS.dash = function() {
+  const u = me();
+  if (!u) return VIEWS.login();
+  if (u.role === 'senior') {
+    const mine = db.projects.filter(p => p.senior === u.id);
+    const mineIds = mine.map(p => p.id);
+    const waiting = db.subs.filter(s => s.status === 'submitted' && mineIds.includes(s.project));
+    const totalSubs = db.subs.filter(s => mineIds.includes(s.project)).length;
+    const approved = db.subs.filter(s => s.status === 'approved' && mineIds.includes(s.project)).length;
+    return shell('<h1>Senior desk</h1><p class="lead">Your projects, your juniors, your free dev time.</p>' +
+      '<div class="stats">' +
+      '<div class="stat"><span>MY PROJECTS</span><b data-count="' + mine.length + '">0</b></div>' +
+      '<div class="stat"><span>SUBSCRIBED JUNIORS</span><b data-count="' + totalSubs + '">0</b></div>' +
+      '<div class="stat"><span>AWAITING REVIEW</span><b style="color:' + (waiting.length ? 'var(--warn)' : 'var(--ink)') + '" data-count="' + waiting.length + '">0</b></div>' +
+      '<div class="stat"><span>APPROVED</span><b style="color:var(--ok)" data-count="' + approved + '">0</b></div>' +
+      '</div>' +
+      (waiting.length ? '<h2>Submissions to review</h2>' + waiting.map(s => subCard(s, true)).join('') : '') +
+      '<h2>Quick action</h2><div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">' +
+      '<div style="flex:1;min-width:200px"><b>Post a new project</b><div class="mono" style="color:var(--mut)">SET REQUIREMENTS · SLOTS · DISCORD CHANNEL</div></div>' +
+      '<button class="btn acc sm" onclick="go(\'newproject\')">+ New project</button></div>');
+  }
+  const mine = db.subs.filter(s => s.junior === u.id);
+  const working = mine.filter(s => s.status === 'working');
+  const submitted = mine.filter(s => s.status === 'submitted');
+  const changes = mine.filter(s => s.status === 'changes');
+  const done = mine.filter(s => s.status === 'approved');
+  return shell('<h1>Hey, ' + esc(u.name.split(' ')[0]) + '</h1><p class="lead">Pick a project, build it, ship it, get reviewed.</p>' +
+    '<div class="stats">' +
+    '<div class="stat"><span>WORKING ON</span><b data-count="' + working.length + '">0</b></div>' +
+    '<div class="stat"><span>SUBMITTED</span><b data-count="' + submitted.length + '">0</b></div>' +
+    '<div class="stat"><span>CHANGES NEEDED</span><b style="color:' + (changes.length ? 'var(--bad)' : 'var(--ink)') + '" data-count="' + changes.length + '">0</b></div>' +
+    '<div class="stat"><span>APPROVED</span><b style="color:var(--ok)" data-count="' + done.length + '">0</b></div>' +
+    '</div>' +
+    (mine.length ? '<h2>Your active work</h2>' + mine.map(s => subCard(s, false)).join('') : '') +
+    '<h2>Find a project</h2><div class="grid g3">' +
+    db.projects.slice(0, 3).map(p => {
+      return '<div class="card"><b style="display:block;margin-bottom:8px">' + esc(p.title) + '</b>' +
+        '<div class="mono" style="color:var(--mut)">' + subsOf(p.id).length + '/' + p.slots + ' SLOTS TAKEN</div>' +
+        '<span class="act" onclick="openProject(\'' + p.id + '\')">View →</span></div>';
+    }).join('') +
+    '</div>');
+};
+
+let pFilter = 'all', pQuery = '';
+VIEWS.projects = function() {
+  const u = me();
+  const filters = u ? ['all', 'open', 'full', 'mine'] : ['all', 'open', 'full'];
+  return shell('<h1>Projects</h1><p class="lead">Posted by seniors · subscribe, build, submit your repo.</p>' +
+    '<div style="margin-bottom:6px"><input placeholder="Search projects…" oninput="pQuery=this.value;drawProjects()"></div>' +
+    '<div class="chips">' + filters.map(d => {
+      return '<button class="chip' + (pFilter === d ? ' on' : '') + '" onclick="pFilter=\'' + d + '\';render()">' + d + '</button>';
+    }).join('') + '</div>' +
+    '<div id="pgrid"></div>');
+};
+
+function drawProjects() {
+  const el = document.getElementById('pgrid'); if (!el) return;
+  const u = me();
+  let list = db.projects.filter(p => {
+    if (pQuery && p.title.toLowerCase().indexOf(pQuery.toLowerCase()) < 0) return false;
+    const full = subsOf(p.id).length >= p.slots;
+    if (pFilter === 'open') return !full;
+    if (pFilter === 'full') return full;
+    if (pFilter === 'mine') return u ? subsOf(p.id).some(s => s.junior === u.id) : false;
+    return true;
+  });
+  if (!list.length) { el.innerHTML = '<div class="empty">No projects match.</div>'; return; }
+  el.innerHTML = '<div class="grid g3">' + list.map(p => {
+    const cnt = subsOf(p.id).length, full = cnt >= p.slots;
+    return '<div class="card">' +
+      '<div class="mono" style="color:var(--mut)">BY ' + esc(uname(p.senior)).toUpperCase() + '</div>' +
+      '<b style="display:block;margin:10px 0 6px;font-size:16px">' + esc(p.title) + '</b>' +
+      '<p style="font-size:13px;color:var(--mut);margin-bottom:10px">' + esc(p.desc) + '</p>' +
+      '<div style="margin-bottom:12px">' + ratingBadge(p.senior) + '</div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center">' +
+      '<span class="pill ' + (full ? 'py' : 'pg') + '">' + cnt + '/' + p.slots + ' slots</span>' +
+      '<span class="act" onclick="openProject(\'' + p.id + '\')">View →</span>' +
+      '</div></div>';
+  }).join('') + '</div>';
+  fx();
+}
+
+function openProject(id) {
+  const p = proj(id); if (!p) return;
+  const u = me();
+  const cnt = subsOf(p.id).length, full = cnt >= p.slots;
+  const mySub = u ? subsOf(p.id).find(s => s.junior === u.id) : null;
+  const isOwner = u && u.id === p.senior;
+  const sr = db.users.find(x => x.id === p.senior);
+  let html = '<div class="mono" style="color:var(--mut)">' + esc(p.id) + ' · POSTED BY ' + esc(uname(p.senior)).toUpperCase() + '</div>' +
+    '<h1 style="font-size:22px;margin:8px 0 6px">' + esc(p.title) + '</h1>' +
+    '<div class="card" style="display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap">' +
+    '<span class="avsm" style="width:30px;height:30px;font-size:11px">' + esc(uname(p.senior).charAt(0)) + '</span>' +
+    '<div><b style="font-size:13.5px">' + esc(uname(p.senior)) + '</b>' +
+    '<div class="mono" style="color:var(--mut);font-size:10.5px">' + xpOf(sr) + ' XP</div></div>' +
+    '<div style="flex:1"></div>' + ratingBadge(p.senior) + '</div>' +
+    '<div style="margin-bottom:14px"><span class="pill ' + (full ? 'py' : 'pg') + '">' + cnt + '/' + p.slots + ' slots</span> <span class="pill pb">disc: ' + esc(p.discord) + '</span></div>' +
+    '<p style="color:var(--mut)">' + esc(p.desc) + '</p>' +
+    '<h2 style="margin:22px 0 8px">Requirements</h2>' +
+    '<div class="card">' + reqsBadge(p) + '</div>' +
+    '<h2 style="margin:22px 0 8px">Communication</h2>' +
+    '<div class="card" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span>💬 Questions &amp; final review happen on Discord</span>' +
+    '<div style="flex:1"></div><button class="btn gh sm" onclick="toast(\'Opening Discord… (demo)\')">' + esc(p.discord) + ' ↗</button></div>';
+  if (isOwner) {
+    html += '<h2 style="margin:22px 0 8px">Your juniors (' + cnt + ')</h2>';
+    html += cnt ? subsOf(p.id).map(s => {
+      return '<div class="card" style="margin-bottom:8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">' +
+        '<span class="avsm">' + esc(uname(s.junior).charAt(0)) + '</span><b>' + esc(uname(s.junior)) + '</b>' +
+        '<div style="flex:1"></div>' + subPill(s.status) +
+        (s.status === 'submitted' ? ' <button class="btn ok sm" onclick="reviewSub(' + s.id + ')">Review →</button>' : '') +
+        '</div>';
+    }).join('') : '<div class="empty">No subscribers yet.</div>';
+  } else if (u) {
+    html += '<div style="margin-top:22px">';
+    if (mySub) {
+      html += '<div class="card" style="border-left:3px solid var(--acc)"><b>You are subscribed</b> ' + subPill(mySub.status);
+      if (mySub.status === 'working' || mySub.status === 'changes') {
+        html += '<div style="margin-top:14px">' +
+          '<label>Your GitHub repo link</label>' +
+          '<input id="subrepo" placeholder="https://github.com/you/repo" value="' + esc(mySub.repo) + '">' +
+          '<button class="btn acc sm" style="margin-top:12px" onclick="submitRepo(' + mySub.id + ')">Submit for review →</button>';
+        if (mySub.feedback) {
+          html += '<div class="card" style="margin-top:12px;border-left:3px solid var(--acc);font-size:13.5px">' +
+            '<b style="font-size:11px;letter-spacing:.07em;color:var(--mut)">SENIOR FEEDBACK</b><br>' + esc(mySub.feedback) + '</div>';
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+    } else if (full) {
+      html += '<div class="card" style="text-align:center;color:var(--mut)">Project is full — ' + cnt + '/' + p.slots + ' juniors subscribed.</div>';
+    } else {
+      html += '<button class="btn acc" style="width:100%" onclick="subscribe(\'' + p.id + '\')">Subscribe to this project (' + cnt + '/' + p.slots + ')</button>' +
+        '<div class="mono" style="color:var(--mut);text-align:center;margin-top:10px">THEN CREATE YOUR OWN GITHUB REPO AND BUILD IT</div>';
+    }
+    html += '</div>';
+  } else {
+    html += '<div class="card" style="text-align:center;margin-top:20px">' +
+      '<div class="mono" style="color:var(--mut);margin-bottom:10px">' + cnt + '/' + p.slots + ' slots taken</div>' +
+      '<div style="color:var(--mut);font-size:13.5px;margin-bottom:14px">Sign in to subscribe and start building this project.</div>' +
+      '<button class="btn acc sm" onclick="closeModal();go(\'login\')">Sign in</button> ' +
+      '<button class="btn gh sm" onclick="closeModal();go(\'register\')">Create account</button>' +
+      '</div>';
+  }
+  html += '<div style="margin-top:18px;text-align:right"><button class="btn" onclick="closeModal()">Close</button></div>';
+  modal(html);
+}
+
+function subscribe(pid) {
+  const u = me(), p = proj(pid);
+  if (!u || !p) return;
+  if (subsOf(pid).length >= p.slots) { toast('Project is full'); return; }
+  db.subs.push({ id: db.nextId++, project: pid, junior: u.id, repo: '', status: 'working', feedback: '', ago: 'JUST NOW' });
+  notify(p.senior, u.name + ' subscribed to "' + p.title + '"', 'acc');
   save();
   toast('Subscribed! Create your GitHub repo and start building.');
-  closeModal();render();
+  closeModal(); render();
 }
-function submitRepo(sid){
-  var s=db.subs.find(function(x){return x.id===sid});
-  var url=$('#subrepo').value.trim();
-  if(!/^https?:\/\/.+\..+/.test(url)){ toast('Enter a valid repo URL (https://…)'); return; }
-  s.repo=url;s.status='submitted';s.ago='JUST NOW';
-  var p=proj(s.project);
-  notify(p.senior,me().name+' submitted a repo for "'+p.title+'"','acc');
+
+function submitRepo(sid) {
+  const s = db.subs.find(x => x.id === sid);
+  const url = document.getElementById('subrepo').value.trim();
+  if (!/^https?:\/\/.+\..+/.test(url)) { toast('Enter a valid repo URL (https://…)'); return; }
+  s.repo = url; s.status = 'submitted'; s.ago = 'JUST NOW';
+  const p = proj(s.project);
+  notify(p.senior, me().name + ' submitted a repo for "' + p.title + '"', 'acc');
   save();
   toast('Repo submitted — the senior will review it');
-  closeModal();render();
+  closeModal(); render();
 }
-function resubmit(sid){
-  var s=db.subs.find(function(x){return x.id===sid});
-  s.status='submitted';s.ago='JUST NOW';
-  var p=proj(s.project);
-  notify(p.senior,me().name+' re-submitted "'+p.title+'"','acc');
+
+function resubmit(sid) {
+  const s = db.subs.find(x => x.id === sid);
+  s.status = 'submitted'; s.ago = 'JUST NOW';
+  const p = proj(s.project);
+  notify(p.senior, me().name + ' re-submitted "' + p.title + '"', 'acc');
   save();
   toast('Re-submitted for review');
   render();
 }
-var verdict='approved';
-function reviewSub(sid){
-  var s=db.subs.find(function(x){return x.id===sid});
-  var p=proj(s.project);
-  verdict='approved';
-  modal('<div class="mono" style="color:var(--mut)">REVIEW · '+esc(p.id)+'</div>'
-  +'<h1 style="font-size:21px;margin:8px 0">'+esc(uname(s.junior))+' — '+esc(p.title)+'</h1>'
-  +'<div class="card mono" style="display:flex;gap:12px;align-items:center;margin:14px 0;flex-wrap:wrap"><span>📦</span>'
-  +'<span style="word-break:break-all">'+esc(s.repo||'No repo submitted yet')+'</span>'
-  +'<div style="flex:1"></div><button class="btn gh sm" onclick="toast(\'Opening repo… (demo)\')">Open ↗</button></div>'
-  +'<label>Verdict</label><div class="chips" style="margin:6px 0">'
-  +'<button class="chip on" id="vok" onclick="pickV(\'approved\')">✓ Approve</button>'
-  +'<button class="chip" id="vch" onclick="pickV(\'changes\')">↺ Request changes</button></div>'
-  +'<label>Feedback for the junior</label>'
-  +'<textarea id="vfb" rows="4" placeholder="What was good, what to improve…"></textarea>'
-  +'<div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end">'
-  +'<button class="btn" onclick="closeModal()">Cancel</button>'
-  +'<button class="btn acc" onclick="sendReview('+sid+')">Send review</button></div>');
+
+let verdict = 'approved';
+function reviewSub(sid) {
+  const s = db.subs.find(x => x.id === sid);
+  const p = proj(s.project);
+  verdict = 'approved';
+  modal('<div class="mono" style="color:var(--mut)">REVIEW · ' + esc(p.id) + '</div>' +
+    '<h1 style="font-size:21px;margin:8px 0">' + esc(uname(s.junior)) + ' — ' + esc(p.title) + '</h1>' +
+    '<div class="card mono" style="display:flex;gap:12px;align-items:center;margin:14px 0;flex-wrap:wrap"><span>📦</span>' +
+    '<span style="word-break:break-all">' + esc(s.repo || 'No repo submitted yet') + '</span>' +
+    '<div style="flex:1"></div><button class="btn gh sm" onclick="toast(\'Opening repo… (demo)\')">Open ↗</button></div>' +
+    '<label>Verdict</label><div class="chips" style="margin:6px 0">' +
+    '<button class="chip on" id="vok" onclick="pickV(\'approved\')">✓ Approve</button>' +
+    '<button class="chip" id="vch" onclick="pickV(\'changes\')">↺ Request changes</button></div>' +
+    '<label>Feedback for the junior</label>' +
+    '<textarea id="vfb" rows="4" placeholder="What was good, what to improve…"></textarea>' +
+    '<div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end">' +
+    '<button class="btn" onclick="closeModal()">Cancel</button>' +
+    '<button class="btn acc" onclick="sendReview(' + sid + ')">Send review</button></div>');
 }
-function pickV(v){
-  verdict=v;
-  $('#vok').classList.toggle('on',v==='approved');
-  $('#vch').classList.toggle('on',v==='changes');
+
+function pickV(v) {
+  verdict = v;
+  document.getElementById('vok').classList.toggle('on', v === 'approved');
+  document.getElementById('vch').classList.toggle('on', v === 'changes');
 }
-var XP_JUNIOR_APPROVED=50,XP_SENIOR_VALIDATED=30;
-function sendReview(sid){
-  var s=db.subs.find(function(x){return x.id===sid});
-  var fb=$('#vfb').value.trim();
-  s.status=verdict;s.feedback=fb;s.ago='JUST NOW';s.rated=false;
-  var p=proj(s.project);
-  if(verdict==='approved'){
-    var j=db.users.find(function(x){return x.id===s.junior});
-    var sr=db.users.find(function(x){return x.id===p.senior});
-    if(j)j.xp=xpOf(j)+XP_JUNIOR_APPROVED;
-    if(sr)sr.xp=xpOf(sr)+XP_SENIOR_VALIDATED;
+
+const XP_JUNIOR_APPROVED = 50, XP_SENIOR_VALIDATED = 30;
+function sendReview(sid) {
+  const s = db.subs.find(x => x.id === sid);
+  const fb = document.getElementById('vfb').value.trim();
+  s.status = verdict; s.feedback = fb; s.ago = 'JUST NOW'; s.rated = false;
+  const p = proj(s.project);
+  if (verdict === 'approved') {
+    const j = db.users.find(x => x.id === s.junior);
+    const sr = db.users.find(x => x.id === p.senior);
+    if (j) j.xp = xpOf(j) + XP_JUNIOR_APPROVED;
+    if (sr) sr.xp = xpOf(sr) + XP_SENIOR_VALIDATED;
+    confetti();
   }
-  notify(s.junior,'Your submission for "'+p.title+'" was '
-    +(verdict==='approved'?'APPROVED 🎉 (+'+XP_JUNIOR_APPROVED+' xp)':'sent back with feedback'),
-    verdict==='approved'?'ok':'bad');
-  save();closeModal();
-  toast(verdict==='approved'?'Approved — junior notified':'Changes requested');
+  notify(s.junior, 'Your submission for "' + p.title + '" was ' +
+    (verdict === 'approved' ? 'APPROVED 🎉 (+' + XP_JUNIOR_APPROVED + ' xp)' : 'sent back with feedback'),
+    verdict === 'approved' ? 'ok' : 'bad');
+  save(); closeModal();
+  toast(verdict === 'approved' ? 'Approved — junior notified' : 'Changes requested');
   render();
 }
 
-/* ---- junior rates senior's review ---- */
-var rateValue=5;
-function pickStar(n){ rateValue=n; var el=$('#starpick'); if(el)el.outerHTML=starsRow(rateValue,true); }
-function openRateModal(sid){
-  var s=db.subs.find(function(x){return x.id===sid});
-  if(!s)return;
-  var p=proj(s.project);
-  rateValue=5;
-  modal('<div class="mono" style="color:var(--mut)">RATE THE REVIEW · '+esc(p.id)+'</div>'
-  +'<h1 style="font-size:21px;margin:8px 0">'+esc(uname(p.senior))+' — '+esc(p.title)+'</h1>'
-  +'<p style="color:var(--mut);font-size:13.5px">How was the code review you got? This is visible on '+esc(uname(p.senior))+'\'s profile, like on intra42.</p>'
-  +'<label>Rating</label>'+starsRow(rateValue,true)
-  +'<label>Comment (optional)</label>'
-  +'<textarea id="rt-c" rows="4" placeholder="What was helpful, what could be clearer…"></textarea>'
-  +'<div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end">'
-  +'<button class="btn" onclick="closeModal()">Cancel</button>'
-  +'<button class="btn acc" onclick="submitRating('+sid+')">Submit rating</button></div>');
+let rateValue = 5;
+function pickStar(n) { rateValue = n; const el = document.getElementById('starpick'); if (el) el.outerHTML = starsRow(rateValue, true); }
+function openRateModal(sid) {
+  const s = db.subs.find(x => x.id === sid);
+  if (!s) return;
+  const p = proj(s.project);
+  rateValue = 5;
+  modal('<div class="mono" style="color:var(--mut)">RATE THE REVIEW · ' + esc(p.id) + '</div>' +
+    '<h1 style="font-size:21px;margin:8px 0">' + esc(uname(p.senior)) + ' — ' + esc(p.title) + '</h1>' +
+    '<p style="color:var(--mut);font-size:13.5px">How was the code review you got? This is visible on ' + esc(uname(p.senior)) + '\'s profile.</p>' +
+    '<label>Rating</label>' + starsRow(rateValue, true) +
+    '<label>Comment (optional)</label>' +
+    '<textarea id="rt-c" rows="4" placeholder="What was helpful, what could be clearer…"></textarea>' +
+    '<div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end">' +
+    '<button class="btn" onclick="closeModal()">Cancel</button>' +
+    '<button class="btn acc" onclick="submitRating(' + sid + ')">Submit rating</button></div>');
 }
-function submitRating(sid){
-  var s=db.subs.find(function(x){return x.id===sid});
-  if(!s)return;
-  var p=proj(s.project);
-  var comment=$('#rt-c').value.trim();
-  db.seniorReviews.push({id:db.nextId++,senior:p.senior,junior:s.junior,project:p.id,sub:s.id,stars:rateValue,comment:comment,ago:'JUST NOW'});
-  s.rated=true;
-  notify(p.senior,me().name+' rated your review on "'+p.title+'" '+rateValue+'★','acc');
-  save();closeModal();
+
+function submitRating(sid) {
+  const s = db.subs.find(x => x.id === sid);
+  if (!s) return;
+  const p = proj(s.project);
+  const comment = document.getElementById('rt-c').value.trim();
+  db.seniorReviews.push({ id: db.nextId++, senior: p.senior, junior: s.junior, project: p.id, sub: s.id, stars: rateValue, comment: comment, ago: 'JUST NOW' });
+  s.rated = true;
+  notify(p.senior, me().name + ' rated your review on "' + p.title + '" ' + rateValue + '★', 'acc');
+  save(); closeModal();
   toast('Thanks — rating submitted');
   render();
 }
 
-/* ---- junior: my work ---- */
-VIEWS.mysubs=function(){
-  var u=me();
-  if(!u)return VIEWS.login();
-  var mine=db.subs.filter(function(s){return s.junior===u.id});
-  return shell('<h1>My work</h1><p class="lead">Everything you subscribed to, and its review status.</p>'
-  +(mine.length
-    ?mine.map(function(s){return subCard(s,false)}).join('')
-    :'<div class="empty">Nothing yet — browse projects and subscribe to one.</div>'
-     +'<br><button class="btn acc" onclick="go(\'projects\')">Browse projects →</button>'));
+VIEWS.mysubs = function() {
+  const u = me();
+  if (!u) return VIEWS.login();
+  const mine = db.subs.filter(s => s.junior === u.id);
+  return shell('<h1>My work</h1><p class="lead">Everything you subscribed to, and its review status.</p>' +
+    (mine.length ?
+      mine.map(s => subCard(s, false)).join('') :
+      '<div class="empty">Nothing yet — browse projects and subscribe to one.</div>' +
+      '<br><button class="btn acc" onclick="go(\'projects\')">Browse projects →</button>'));
 };
 
-/* ---- senior: my projects ---- */
-VIEWS.myprojects=function(){
-  var u=me();
-  if(!u)return VIEWS.login();
-  var mine=db.projects.filter(function(p){return p.senior===u.id});
-  return shell('<h1>My projects</h1><p class="lead">Projects you posted as a senior.</p>'
-  +'<div style="margin-bottom:18px"><button class="btn acc sm" onclick="go(\'newproject\')">+ Post new project</button></div>'
-  +(mine.length
-    ?'<div class="grid g2">'+mine.map(function(p){
-      var cnt=subsOf(p.id).length;
-      return '<div class="card"><div class="mono" style="color:var(--mut)">'+esc(p.id)+'</div>'
-      +'<b style="display:block;margin:8px 0 6px;font-size:16px">'+esc(p.title)+'</b>'
-      +'<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">'
-      +'<span class="pill '+(cnt>=p.slots?'py':'pg')+'">'+cnt+'/'+p.slots+' slots</span>'
-      +'<span class="pill pb">disc: '+esc(p.discord)+'</span></div>'
-      +'<span class="act" onclick="openProject(\''+p.id+'\')">Manage juniors →</span></div>';
-    }).join('')+'</div>'
-    :'<div class="empty">No projects yet. Post your first one and get free dev help.</div>'));
+VIEWS.myprojects = function() {
+  const u = me();
+  if (!u) return VIEWS.login();
+  const mine = db.projects.filter(p => p.senior === u.id);
+  return shell('<h1>My projects</h1><p class="lead">Projects you posted as a senior.</p>' +
+    '<div style="margin-bottom:18px"><button class="btn acc sm" onclick="go(\'newproject\')">+ Post new project</button></div>' +
+    (mine.length ?
+      '<div class="grid g2">' + mine.map(p => {
+        const cnt = subsOf(p.id).length;
+        return '<div class="card"><div class="mono" style="color:var(--mut)">' + esc(p.id) + '</div>' +
+          '<b style="display:block;margin:8px 0 6px;font-size:16px">' + esc(p.title) + '</b>' +
+          '<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">' +
+          '<span class="pill ' + (cnt >= p.slots ? 'py' : 'pg') + '">' + cnt + '/' + p.slots + ' slots</span>' +
+          '<span class="pill pb">disc: ' + esc(p.discord) + '</span></div>' +
+          '<span class="act" onclick="openProject(\'' + p.id + '\')">Manage juniors →</span></div>';
+      }).join('') + '</div>' :
+      '<div class="empty">No projects yet. Post your first one and get free dev help.</div>'));
 };
 
-/* ---- senior: new project ---- */
-VIEWS.newproject=function(){
-  var u=me();
-  if(!u||u.role!=='senior')return VIEWS.login();
-  return shell('<h1>Post a project</h1><p class="lead">Set the requirements, the slots, and your Discord.</p>'
-  +'<div class="card" style="max-width:640px">'
-  +'<label>Project title</label><input id="np-t" placeholder="e.g. Task Manager REST API">'
-  +'<label>Short description</label><input id="np-d" placeholder="What the junior will build, in one sentence">'
-  +'<label>Requirements (one per line)</label><textarea id="np-r" rows="6" placeholder="- Java · Spring Boot&#10;- JWT auth&#10;- Unit tests&#10;- Clean commits"></textarea>'
-  +'<label>Max juniors (slots)</label><input id="np-s" type="number" min="1" max="20" value="3">'
-  +'<label>Your Discord invite (create a channel for this project)</label><input id="np-c" placeholder="discord.gg/yourserver">'
-  +'<div id="np-err"></div>'
-  +'<div style="display:flex;gap:10px;margin-top:22px;justify-content:flex-end">'
-  +'<button class="btn" onclick="go(\'myprojects\')">Cancel</button>'
-  +'<button class="btn acc" onclick="createProject()">Publish project →</button></div></div>');
+VIEWS.newproject = function() {
+  const u = me();
+  if (!u || u.role !== 'senior') return VIEWS.login();
+  return shell('<h1>Post a project</h1><p class="lead">Set the requirements, the slots, and your Discord.</p>' +
+    '<div class="card" style="max-width:640px">' +
+    '<label>Project title</label><input id="np-t" placeholder="e.g. Task Manager REST API">' +
+    '<label>Short description</label><input id="np-d" placeholder="What the junior will build, in one sentence">' +
+    '<label>Requirements (PDF)</label>' +
+    '<input id="np-pdf" type="file" accept="application/pdf">' +
+    '<div class="mono" style="color:var(--mut);font-size:10.5px;margin-top:6px">Upload the full requirements as a PDF — juniors will open it from the project page.</div>' +
+    '<label>Max juniors (slots)</label><input id="np-s" type="number" min="1" max="20" value="3">' +
+    '<label>Your Discord invite (create a channel for this project)</label><input id="np-c" placeholder="discord.gg/yourserver">' +
+    '<div id="np-err"></div>' +
+    '<div style="display:flex;gap:10px;margin-top:22px;justify-content:flex-end">' +
+    '<button class="btn" onclick="go(\'myprojects\')">Cancel</button>' +
+    '<button class="btn acc" onclick="createProject()">Publish project →</button></div></div>');
 };
-function createProject(){
-  var u=me();
-  if(!u||u.role!=='senior'){ go('login'); return; }
-  var t=$('#np-t').value.trim(),d=$('#np-d').value.trim(),r=$('#np-r').value.trim();
-  var sl=parseInt($('#np-s').value,10);
-  var c=$('#np-c').value.trim()||'discord.gg/yourserver';
-  if(!t||!d||!r||!sl||sl<1){
-    $('#np-err').innerHTML='<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Title, description, requirements and slots (≥1) are required.</div>';
+
+function createProject() {
+  const meU = me();
+  if (!meU || meU.role !== 'senior') { go('login'); return; }
+  const t = document.getElementById('np-t').value.trim(), d = document.getElementById('np-d').value.trim();
+  const sl = parseInt(document.getElementById('np-s').value, 10);
+  const c = document.getElementById('np-c').value.trim() || 'discord.gg/yourserver';
+  const pdfInput = document.getElementById('np-pdf');
+  const file = pdfInput.files && pdfInput.files[0];
+  const errBox = document.getElementById('np-err');
+  if (!t || !d || !sl || sl < 1 || !file) {
+    errBox.innerHTML = '<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Title, description, slots (≥1) and a PDF of the requirements are all required.</div>';
     return;
   }
-  var u=me();
-  db.projects.push({
-    id:'P-'+String(db.projects.length+1).padStart(2,'0'),
-    senior:u.id,title:t,desc:d,reqs:r,slots:sl,discord:c
-  });
-  save();
-  toast('Project published — juniors can now subscribe');
-  go('myprojects');
+  if (file.type !== 'application/pdf') {
+    errBox.innerHTML = '<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">The requirements file must be a PDF.</div>';
+    return;
+  }
+  errBox.innerHTML = '';
+  const reader = new FileReader();
+  reader.onload = function() {
+    const n = db.projects.length + 1;
+    db.projects.push({
+      id: 'P-' + (n < 10 ? '0' : '') + n,
+      senior: meU.id, title: t, desc: d, slots: sl, discord: c,
+      pdf: { name: file.name, data: reader.result }
+    });
+    save();
+    toast('Project published — juniors can now subscribe');
+    go('myprojects');
+  };
+  reader.onerror = function() {
+    errBox.innerHTML = '<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Could not read that PDF — please try again.</div>';
+  };
+  reader.readAsDataURL(file);
 }
 
-/* ---- leaderboard ---- */
-var lbTab='juniors';
-function setLbTab(t){ lbTab=t; render(); }
-VIEWS.leaderboard=function(){
-  var body=lbTab==='juniors'?leaderboardJuniors():leaderboardSeniors();
-  return shell('<h1>Leaderboard</h1><p class="lead">Ranked by XP — earned on every project shipped and validated.</p>'
-  +'<div class="chips">'
-  +'<button class="chip'+(lbTab==='juniors'?' on':'')+'" onclick="setLbTab(\'juniors\')">Juniors</button>'
-  +'<button class="chip'+(lbTab==='seniors'?' on':'')+'" onclick="setLbTab(\'seniors\')">Seniors</button>'
-  +'</div>'+body);
+let lbTab = 'juniors';
+function setLbTab(t) { lbTab = t; render(); }
+VIEWS.leaderboard = function() {
+  const body = lbTab === 'juniors' ? leaderboardJuniors() : leaderboardSeniors();
+  return shell('<h1>Leaderboard</h1><p class="lead">Ranked by XP — earned on every project shipped and validated.</p>' +
+    '<div class="chips">' +
+    '<button class="chip' + (lbTab === 'juniors' ? ' on' : '') + '" onclick="setLbTab(\'juniors\')">Juniors</button>' +
+    '<button class="chip' + (lbTab === 'seniors' ? ' on' : '') + '" onclick="setLbTab(\'seniors\')">Seniors</button>' +
+    '</div>' + body);
 };
-function leaderboardJuniors(){
-  var rows=db.users.filter(function(u){return u.role==='junior'}).map(function(u){
-    var m=db.subs.filter(function(s){return s.junior===u.id});
-    return {u:u,subs:m.length,ok:m.filter(function(s){return s.status==='approved'}).length,xp:xpOf(u)};
-  }).sort(function(a,b){return b.xp-a.xp});
-  var maxXp=Math.max.apply(null,rows.map(function(r){return r.xp}).concat([1]));
-  return '<div class="tblw"><table><tr><th>#</th><th>Junior</th><th>XP</th><th>Subscriptions</th><th>Approved</th></tr>'
-  +(rows.length
-    ?rows.map(function(r,i){
-      return '<tr><td class="mono'+(i===0?' rank1':'')+'" style="'+(i===0?'':'color:var(--mut)')+'">'+(i===0?'★':String(i+1).padStart(2,'0'))+'</td>'
-      +'<td><span class="avsm">'+esc(r.u.name.charAt(0))+'</span><b>'+esc(r.u.name)+'</b></td>'
-      +'<td class="mono"><b>'+r.xp+'</b> xp<div class="xpbar" style="width:80px"><i style="width:'+Math.round(r.xp/maxXp*100)+'%"></i></div></td>'
-      +'<td>'+r.subs+'</td>'
-      +'<td><span class="pill '+(r.ok?'pg':'pn')+'">'+r.ok+'</span></td></tr>';
-    }).join('')
-    :'<tr><td colspan="5" style="color:var(--mut);text-align:center;padding:26px">No juniors yet</td></tr>')
-  +'</table></div>';
-}
-function leaderboardSeniors(){
-  var rows=db.users.filter(function(u){return u.role==='senior'}).map(function(u){
-    var validated=db.projects.filter(function(p){return p.senior===u.id}).reduce(function(a,p){
-      return a+db.subs.filter(function(s){return s.project===p.id&&s.status==='approved'}).length;
-    },0);
-    return {u:u,xp:xpOf(u),r:seniorRating(u.id),validated:validated};
-  }).sort(function(a,b){return b.xp-a.xp});
-  var maxXp=Math.max.apply(null,rows.map(function(r){return r.xp}).concat([1]));
-  return '<div class="tblw"><table><tr><th>#</th><th>Senior</th><th>XP</th><th>Projects validated</th><th>Rating</th></tr>'
-  +(rows.length
-    ?rows.map(function(r,i){
-      return '<tr><td class="mono'+(i===0?' rank1':'')+'" style="'+(i===0?'':'color:var(--mut)')+'">'+(i===0?'★':String(i+1).padStart(2,'0'))+'</td>'
-      +'<td><span class="avsm">'+esc(r.u.name.charAt(0))+'</span><b>'+esc(r.u.name)+'</b></td>'
-      +'<td class="mono"><b>'+r.xp+'</b> xp<div class="xpbar" style="width:80px"><i style="width:'+Math.round(r.xp/maxXp*100)+'%"></i></div></td>'
-      +'<td>'+r.validated+'</td>'
-      +'<td>'+ratingBadge(r.u.id)+'</td></tr>';
-    }).join('')
-    :'<tr><td colspan="5" style="color:var(--mut);text-align:center;padding:26px">No seniors yet</td></tr>')
-  +'</table></div>';
+
+function xpBarHtml(xp, maxXp) {
+  return '<div class="xpbar" style="width:80px"><i data-w="' + Math.round(xp / maxXp * 100) + '%"></i></div>';
 }
 
-/* ---- profile ---- */
-VIEWS.profile=function(){
-  var u=me();
-  if(!u)return VIEWS.login();
-  var roleClass=u.role==='senior'?'pb':u.role==='admin'?'pa':'pg';
-  var html='<h1>Profile</h1><p class="lead">Your account.</p>'
-  +'<div class="card" style="max-width:560px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">'
-  +'<span class="av" style="width:56px;height:56px;font-size:20px">'+esc(u.name.charAt(0))+'</span>'
-  +'<div style="flex:1;min-width:180px"><b style="font-size:18px">'+esc(u.name)+'</b>'
-  +'<div class="mono" style="color:var(--mut)">'+esc(u.email)+'</div>'
-  +'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">'
-  +'<span class="pill '+roleClass+'">'+u.role.toUpperCase()+'</span>'
-  +(u.role!=='admin'?'<span class="pill pn mono">'+xpOf(u)+' XP</span>':'')
-  +(u.role==='senior'?ratingBadge(u.id):'')
-  +'</div></div></div>';
+function leaderboardJuniors() {
+  const rows = db.users.filter(u => u.role === 'junior').map(u => {
+    const m = db.subs.filter(s => s.junior === u.id);
+    return { u: u, subs: m.length, ok: m.filter(s => s.status === 'approved').length, xp: xpOf(u) };
+  }).sort((a, b) => b.xp - a.xp);
+  const maxXp = Math.max.apply(null, rows.map(r => r.xp).concat([1]));
+  return '<div class="tblw"><table><tr><th>#</th><th>Junior</th><th>XP</th><th>Subscriptions</th><th>Approved</th></tr>' +
+    (rows.length ?
+      rows.map((r, i) => {
+        return '<tr><td class="mono' + (i === 0 ? ' rank1' : '') + '" style="' + (i === 0 ? '' : 'color:var(--mut)') + '">' + (i === 0 ? '★' : String(i + 1).padStart(2, '0')) + '</td>' +
+          '<td><span class="avsm">' + esc(r.u.name.charAt(0)) + '</span><b>' + esc(r.u.name) + '</b></td>' +
+          '<td class="mono"><b>' + r.xp + '</b> xp' + xpBarHtml(r.xp, maxXp) + '</td>' +
+          '<td>' + r.subs + '</td>' +
+          '<td><span class="pill ' + (r.ok ? 'pg' : 'pn') + '">' + r.ok + '</span></td></tr>';
+      }).join('') :
+      '<tr><td colspan="5" style="color:var(--mut);text-align:center;padding:26px">No juniors yet</td></tr>') +
+    '</table></div>';
+}
 
-  if(u.role==='senior'){
-    var revs=db.seniorReviews.filter(function(r){return r.senior===u.id}).slice().reverse();
-    html+='<h2>Reviews from juniors</h2>'
-    +(revs.length
-      ?'<div class="card" style="max-width:560px">'+revs.map(function(r){
-        return '<div class="reviewrow"><div style="display:flex;justify-content:space-between;align-items:center">'
-        +'<b>'+esc(uname(r.junior))+'</b><span class="mono" style="color:var(--mut)">'+esc(r.ago)+'</span></div>'
-        +starsRow(r.stars,false)
-        +(r.comment?'<p style="margin-top:6px;color:var(--mut);font-size:13.5px">'+esc(r.comment)+'</p>':'')
-        +'</div>';
-      }).join('')+'</div>'
-      :'<div class="empty" style="max-width:560px">No reviews yet — they show up once juniors rate your feedback.</div>');
+function leaderboardSeniors() {
+  const rows = db.users.filter(u => u.role === 'senior').map(u => {
+    const validated = db.projects.filter(p => p.senior === u.id).reduce((a, p) => {
+      return a + db.subs.filter(s => s.project === p.id && s.status === 'approved').length;
+    }, 0);
+    return { u: u, xp: xpOf(u), validated: validated };
+  }).sort((a, b) => b.xp - a.xp);
+  const maxXp = Math.max.apply(null, rows.map(r => r.xp).concat([1]));
+  return '<div class="tblw"><table><tr><th>#</th><th>Senior</th><th>XP</th><th>Projects validated</th><th>Rating</th></tr>' +
+    (rows.length ?
+      rows.map((r, i) => {
+        return '<tr><td class="mono' + (i === 0 ? ' rank1' : '') + '" style="' + (i === 0 ? '' : 'color:var(--mut)') + '">' + (i === 0 ? '★' : String(i + 1).padStart(2, '0')) + '</td>' +
+          '<td><span class="avsm">' + esc(r.u.name.charAt(0)) + '</span><b>' + esc(r.u.name) + '</b></td>' +
+          '<td class="mono"><b>' + r.xp + '</b> xp' + xpBarHtml(r.xp, maxXp) + '</td>' +
+          '<td>' + r.validated + '</td>' +
+          '<td>' + ratingBadge(r.u.id) + '</td></tr>';
+      }).join('') :
+      '<tr><td colspan="5" style="color:var(--mut);text-align:center;padding:26px">No seniors yet</td></tr>') +
+    '</table></div>';
+}
+
+let profileEditing = false;
+function toggleProfileEdit(on) { profileEditing = on; render(); }
+
+VIEWS.profile = function() {
+  const u = me();
+  if (!u) return VIEWS.login();
+  const roleClass = u.role === 'senior' ? 'pb' : u.role === 'admin' ? 'pa' : 'pg';
+  let html = '<h1>Profile</h1><p class="lead">Your account.</p>' +
+    '<div class="card" style="max-width:560px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">' +
+    '<span class="av" style="width:56px;height:56px;font-size:20px">' + esc(u.name.charAt(0)) + '</span>' +
+    '<div style="flex:1;min-width:180px"><b style="font-size:18px">' + esc(u.name) + '</b>' +
+    '<div class="mono" style="color:var(--mut)">' + esc(u.email) + '</div>' +
+    '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">' +
+    '<span class="pill ' + roleClass + '">' + u.role.toUpperCase() + '</span>' +
+    (u.role !== 'admin' ? '<span class="pill pn mono">' + xpOf(u) + ' XP</span>' : '') +
+    (u.role === 'senior' ? ratingBadge(u.id) : '') +
+    '</div></div></div>';
+
+  if (u.role === 'senior') {
+    const revs = db.seniorReviews.filter(r => r.senior === u.id).slice().reverse();
+    html += '<h2>Reviews from juniors</h2>' +
+      (revs.length ?
+        '<div class="card" style="max-width:560px">' + revs.map(r => {
+          return '<div class="reviewrow"><div style="display:flex;justify-content:space-between;align-items:center">' +
+            '<b>' + esc(uname(r.junior)) + '</b><span class="mono" style="color:var(--mut)">' + esc(r.ago) + '</span></div>' +
+            starsRow(r.stars, false) +
+            (r.comment ? '<p style="margin-top:6px;color:var(--mut);font-size:13.5px">' + esc(r.comment) + '</p>' : '') +
+            '</div>';
+        }).join('') + '</div>' :
+        '<div class="empty" style="max-width:560px">No reviews yet — they show up once juniors rate your feedback.</div>');
   }
 
-  if(u.role==='junior'){
-    html+='<h2>Become a senior</h2>';
-    if(u.seniorReq&&u.seniorReq.status==='pending'){
-      html+='<div class="card" style="max-width:560px"><span class="pill py">PENDING</span>'
-        +'<p style="margin-top:10px;color:var(--mut);font-size:13.5px">Your request is waiting for admin approval.</p>'
-        +'<div class="mono" style="color:var(--mut);margin-top:8px">'+esc(u.seniorReq.linkedin)+'</div></div>';
-    }else{
-      html+='<div class="card" style="max-width:560px">'
-        +(u.seniorReq&&u.seniorReq.status==='rejected'?'<span class="pill pr">REJECTED — you can request again</span>':'')
-        +'<p style="color:var(--mut);font-size:13.5px;margin:8px 0 4px">Post your own projects for juniors to build. An admin reviews your LinkedIn before approving.</p>'
-        +'<label>LinkedIn profile</label><input id="pf-li" placeholder="linkedin.com/in/you" value="'+esc(u.linkedin||'')+'">'
-        +'<div id="pf-err"></div>'
-        +'<button class="btn acc sm" style="margin-top:14px" onclick="requestSenior()">Request senior status →</button></div>';
+  if (u.role === 'junior') {
+    const approved = db.subs.filter(s => s.junior === u.id && s.status === 'approved').length;
+    html += '<h2>Progress</h2><div class="card" style="max-width:560px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">' +
+      '<span class="mono" style="color:var(--mut)">' + approved + ' PROJECT' + (approved === 1 ? '' : 'S') + ' APPROVED</span>' +
+      '<span class="pill pn mono">' + xpOf(u) + ' XP</span></div>' +
+      '<div class="xpbar" style="margin-top:12px"><i data-w="' + Math.min(100, xpOf(u) / 5) + '%"></i></div>' +
+      '<div class="mono" style="color:var(--mut);margin-top:8px;font-size:10.5px">' + Math.max(0, 500 - xpOf(u)) + ' XP TO SENIOR TRACK</div>' +
+      '<div style="margin-top:16px"><button class="btn gh sm" onclick="requestSenior()">Request senior promotion</button></div>' +
+      '</div>';
+    if (u.seniorReq) {
+      const map = { pending: '<span class="pill py">request pending</span>', approved: '<span class="pill pg">promoted to senior ✓</span>', rejected: '<span class="pill pr">request rejected</span>' };
+      html += '<div class="card" style="max-width:560px;margin-top:12px;font-size:13.5px">Senior request: ' + map[u.seniorReq.status] + '</div>';
     }
   }
 
-  html+='<div style="max-width:560px;margin-top:18px"><button class="btn gh" onclick="logout()">Sign out</button></div>';
+  html += '<h2>Edit profile</h2>';
+  if (!profileEditing) {
+    html += '<div class="card" style="max-width:560px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">' +
+      '<div><b style="display:block">' + esc(u.name) + '</b>' +
+      '<span class="mono" style="color:var(--mut);font-size:12.5px">' + (u.linkedin ? esc(u.linkedin) : 'No LinkedIn set') + '</span></div>' +
+      '<button class="btn acc sm" onclick="toggleProfileEdit(true)">Edit profile</button>' +
+      '</div></div>';
+  } else {
+    html += '<div class="card" style="max-width:560px">' +
+      '<label>Name</label><input id="pf-n" value="' + esc(u.name) + '">' +
+      '<label>LinkedIn (optional)</label><input id="pf-l" placeholder="linkedin.com/in/you" value="' + esc(u.linkedin || '') + '">' +
+      '<label>New password (leave both empty to keep current)</label><input id="pf-p" type="password" placeholder="min 8 characters">' +
+      '<label>Repeat new password</label><input id="pf-p2" type="password" placeholder="repeat password">' +
+      '<div id="pf-err"></div>' +
+      '<div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end;flex-wrap:wrap">' +
+      '<button class="btn gh" onclick="resetDemo()">Reset demo data</button>' +
+      '<button class="btn" onclick="toggleProfileEdit(false)">Cancel</button>' +
+      '<button class="btn acc" onclick="saveProfile()">Save changes</button></div></div>';
+  }
   return shell(html);
 };
-function requestSenior(){
-  var li=$('#pf-li').value.trim();
-  if(!li){
-    $('#pf-err').innerHTML='<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">A LinkedIn profile link is required.</div>';
+
+function saveProfile() {
+  const u = me(); if (!u) return;
+  const n = document.getElementById('pf-n').value.trim(), l = document.getElementById('pf-l').value.trim();
+  const p = document.getElementById('pf-p').value, p2 = document.getElementById('pf-p2').value;
+  const errBox = document.getElementById('pf-err');
+  if (!n) { errBox.innerHTML = '<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Name cannot be empty</div>'; return; }
+  if (p || p2) {
+    if (p.length < 8) { errBox.innerHTML = '<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">New password must be ≥ 8 characters</div>'; return; }
+    if (p !== p2) { errBox.innerHTML = '<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">Passwords do not match</div>'; return; }
+  }
+  u.name = n; u.linkedin = l;
+  if (p) u.pw = p;
+  save();
+  profileEditing = false;
+  toast('Profile updated');
+  render();
+}
+
+function requestSenior() {
+  const u = me(); if (!u || u.role !== 'junior') return;
+  if (u.seniorReq && u.seniorReq.status === 'pending') { toast('Request already pending'); return; }
+  modal('<div class="mono" style="color:var(--mut)">SENIOR PROMOTION</div>' +
+    '<h1 style="font-size:21px;margin:8px 0 6px">Request senior promotion</h1>' +
+    '<p style="color:var(--mut);font-size:13.5px;margin-bottom:14px">A LinkedIn profile is required so an admin can verify you before approving.</p>' +
+    '<label>LinkedIn profile URL</label>' +
+    '<input id="sr-l" placeholder="linkedin.com/in/you" value="' + esc(u.linkedin || '') + '">' +
+    '<div id="sr-err"></div>' +
+    '<div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">' +
+    '<button class="btn" onclick="closeModal()">Cancel</button>' +
+    '<button class="btn acc" onclick="sendSeniorRequest()">Send request →</button></div>');
+}
+
+function sendSeniorRequest() {
+  const u = me(); if (!u) return;
+  const link = document.getElementById('sr-l').value.trim();
+  if (!link) {
+    document.getElementById('sr-err').innerHTML = '<div class="card" style="border-left:3px solid var(--bad);padding:12px 16px;margin-top:14px;font-size:13.5px">LinkedIn is required to request senior promotion.</div>';
     return;
   }
-  var u=me();
-  u.linkedin=li;
-  u.seniorReq={status:'pending',linkedin:li,ago:'JUST NOW'};
+  u.linkedin = link;
+  u.seniorReq = { status: 'pending', linkedin: link, ago: 'JUST NOW' };
+  db.users.filter(x => x.role === 'admin').forEach(a => {
+    notify(a.id, u.name + ' requested senior promotion', 'acc');
+  });
   save();
+  closeModal();
   toast('Request sent — an admin will review it');
   render();
 }
 
-/* ---- notifications ---- */
-VIEWS.notifications=function(){
-  var u=me();
-  if(!u)return VIEWS.login();
-  var mine=db.notifs.filter(function(n){return n.user===u.id}).slice().reverse();
-  return shell('<h1>Notifications</h1><p class="lead">'+(mine.length?mine.length+' update'+(mine.length>1?'s':''):'All quiet.')+'</p>'
-  +(mine.length
-    ?mine.map(function(n){
-      return '<div class="card" style="display:flex;gap:14px;margin-bottom:10px;align-items:center">'
-      +'<span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:'
-      +(n.kind==='ok'?'var(--ok)':n.kind==='bad'?'var(--bad)':'var(--acc)')+'"></span>'
-      +'<div style="flex:1">'+esc(n.txt)+'</div>'
-      +'<span class="mono" style="color:var(--mut)">'+esc(n.ago)+'</span></div>';
-    }).join('')
-    :'<div class="empty">No notifications yet.</div>'));
+VIEWS.notifications = function() {
+  const u = me();
+  if (!u) return VIEWS.login();
+  const list = myNotifs().slice().reverse();
+  return shell('<h1>Notifications</h1><p class="lead">Everything that happened on your work.</p>' +
+    (list.length ?
+      list.map(n => {
+        const c = n.kind === 'ok' ? 'pg' : n.kind === 'bad' ? 'pr' : 'pb';
+        return '<div class="card" style="margin-bottom:10px;display:flex;gap:14px;align-items:center">' +
+          '<span class="pill ' + c + '" style="width:38px;text-align:center">' + esc(n.ago) + '</span>' +
+          '<span>' + esc(n.txt) + '</span></div>';
+      }).join('') :
+      '<div class="empty">Nothing yet. Subscribe to a project to get things moving.</div>') +
+    '<br><button class="btn gh sm" onclick="clearNotifs()">Clear all</button>');
 };
 
-/* ---- admin panel ---- */
-VIEWS.admin=function(){
-  var u=me();
-  if(!u||u.role!=='admin')return VIEWS.login();
-  var pend=pendingSeniorReqs();
-  var seniors=db.users.filter(function(x){return x.role==='senior'}).length;
-  var juniors=db.users.filter(function(x){return x.role==='junior'}).length;
-  return shell('<h1>Admin panel</h1><p class="lead">Approve senior requests and keep an eye on the platform.</p>'
-  +'<div class="stats">'
-  +'<div class="stat"><span>TOTAL USERS</span><b>'+db.users.length+'</b></div>'
-  +'<div class="stat"><span>SENIORS</span><b>'+seniors+'</b></div>'
-  +'<div class="stat"><span>JUNIORS</span><b>'+juniors+'</b></div>'
-  +'<div class="stat"><span>PENDING REQUESTS</span><b style="color:'+(pend.length?'var(--warn)':'var(--ink)')+'">'+pend.length+'</b></div>'
-  +'</div>'
-  +'<h2>Senior status requests</h2>'
-  +(pend.length
-    ?pend.map(function(r){
-      return '<div class="card" style="margin-bottom:10px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">'
-      +'<span class="avsm">'+esc(r.name.charAt(0))+'</span>'
-      +'<div style="flex:1;min-width:180px"><b>'+esc(r.name)+'</b>'
-      +'<div class="mono" style="color:var(--mut)">'+esc(r.email)+'</div></div>'
-      +'<a href="https://'+esc((r.seniorReq.linkedin||'').replace(/^https?:\/\//,''))+'" target="_blank" class="chip">'+esc(r.seniorReq.linkedin)+' ↗</a>'
-      +'<span class="mono" style="color:var(--mut)">'+esc(r.seniorReq.ago)+'</span>'
-      +'<button class="btn ok sm" onclick="approveSenior('+r.id+')">✓ Approve</button>'
-      +'<button class="btn gh sm" onclick="rejectSenior('+r.id+')">✕ Reject</button>'
-      +'</div>';
-    }).join('')
-    :'<div class="empty">No pending requests.</div>')
-  +'<h2>All users</h2>'
-  +'<div class="tblw"><table><tr><th>Name</th><th>Email</th><th>Role</th><th>XP</th></tr>'
-  +db.users.map(function(x){
-    return '<tr><td><span class="avsm">'+esc(x.name.charAt(0))+'</span><b>'+esc(x.name)+'</b></td>'
-    +'<td class="mono" style="color:var(--mut)">'+esc(x.email)+'</td>'
-    +'<td><span class="pill '+(x.role==='senior'?'pb':x.role==='admin'?'pa':'pg')+'">'+x.role.toUpperCase()+'</span></td>'
-    +'<td>'+xpOf(x)+'</td></tr>';
-  }).join('')
-  +'</table></div>');
-};
-function approveSenior(uid){
-  var u=db.users.find(function(x){return x.id===uid});
-  if(!u)return;
-  u.role='senior';
-  u.seniorReq.status='approved';
-  notify(u.id,'You are now a senior — you can post projects 🎉','ok');
-  save();
-  toast(u.name+' approved as senior');
-  render();
+function clearNotifs() {
+  const u = me(); if (!u) return;
+  db.notifs = db.notifs.filter(n => n.user !== u.id);
+  save(); toast('Notifications cleared'); render();
 }
-function rejectSenior(uid){
-  var u=db.users.find(function(x){return x.id===uid});
-  if(!u)return;
-  u.seniorReq.status='rejected';
-  notify(u.id,'Your senior request was declined. You can re-apply anytime.','bad');
+
+VIEWS.admin = function() {
+  const u = me();
+  if (!u || u.role !== 'admin') {
+    return shell('<h1 style="color:var(--bad)">Access denied</h1><p class="lead">Admin area. Sign in as <b>admin@dev.io</b> / <b>demo1234</b>.</p>');
+  }
+  const reqs = pendingSeniorReqs();
+  let html = '<h1>Admin panel</h1><p class="lead">Full oversight of the platform.</p>' +
+    '<div class="stats">' +
+    '<div class="stat"><span>USERS</span><b data-count="' + db.users.length + '">0</b></div>' +
+    '<div class="stat"><span>PROJECTS</span><b data-count="' + db.projects.length + '">0</b></div>' +
+    '<div class="stat"><span>SUBMISSIONS</span><b data-count="' + db.subs.length + '">0</b></div>' +
+    '<div class="stat"><span>PENDING SENIOR REQ.</span><b style="color:' + (reqs.length ? 'var(--warn)' : 'var(--ink)') + '" data-count="' + reqs.length + '">0</b></div>' +
+    '</div>';
+  if (reqs.length) {
+    html += '<h2>Senior promotion requests</h2>' +
+      reqs.map(r => {
+        return '<div class="card" style="margin-bottom:10px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">' +
+          '<span class="avsm" style="width:32px;height:32px;font-size:12px">' + esc(r.name.charAt(0)) + '</span>' +
+          '<div><b>' + esc(r.name) + '</b><div class="mono" style="color:var(--mut);font-size:10.5px">' + esc(r.email) + ' · ' + esc(r.seniorReq.linkedin || 'no linkedin') + '</div></div>' +
+          '<div style="flex:1"></div>' +
+          '<button class="btn ok sm" onclick="decideSenior(' + r.id + ',true)">Approve</button>' +
+          '<button class="btn gh sm" style="color:var(--bad)" onclick="decideSenior(' + r.id + ',false)">Reject</button>' +
+          '</div>';
+      }).join('');
+  }
+  html += '<h2>All users</h2><div class="tblw"><table><tr><th>User</th><th>Email</th><th>Role</th><th>XP</th><th></th></tr>' +
+    db.users.map(x => {
+      return '<tr><td><span class="avsm">' + esc(x.name.charAt(0)) + '</span><b>' + esc(x.name) + '</b></td>' +
+        '<td class="mono" style="color:var(--mut)">' + esc(x.email) + '</td>' +
+        '<td><span class="pill ' + (x.role === 'admin' ? 'pa' : x.role === 'senior' ? 'pb' : 'pg') + '">' + x.role.toUpperCase() + '</span></td>' +
+        '<td class="mono">' + xpOf(x) + '</td>' +
+        '<td>' + (x.role === 'junior' ? '<span class="act" onclick="forceSenior(' + x.id + ',this)">make senior</span>' : '') + '</td></tr>';
+    }).join('') + '</table></div>';
+  html += '<h2>All submissions</h2><div class="tblw"><table><tr><th>Project</th><th>Junior</th><th>Status</th><th>Repo</th></tr>' +
+    (db.subs.length ? db.subs.map(s => {
+      const p = proj(s.project);
+      return '<tr><td>' + (p ? esc(p.title) : '—') + '</td>' +
+        '<td><span class="avsm">' + esc(uname(s.junior).charAt(0)) + '</span>' + esc(uname(s.junior)) + '</td>' +
+        '<td>' + subPill(s.status) + '</td>' +
+        '<td class="mono" style="color:var(--mut)">' + (s.repo ? '<span class="act" onclick="toast(\'Opening repo… (demo)\')">open ↗</span>' : '—') + '</td></tr>';
+    }).join('') : '<tr><td colspan="4" style="color:var(--mut);text-align:center;padding:26px">No submissions</td></tr>') +
+    '</table></div>';
+  return shell(html);
+};
+
+function decideSenior(uid, ok) {
+  const x = db.users.find(v => v.id === uid);
+  if (!x || !x.seniorReq) return;
+  x.seniorReq.status = ok ? 'approved' : 'rejected';
+  if (ok) x.role = 'senior';
+  notify(uid, ok ? 'Your senior request was APPROVED — welcome to the seniors side 🎉' : 'Your senior request was rejected', ok ? 'ok' : 'bad');
   save();
-  toast(u.name+'\'s request rejected');
+  toast(ok ? x.name + ' is now a senior' : 'Request rejected');
   render();
 }
 
-/* ---- modal helpers ---- */
-function modal(html){
+function forceSenior(uid) {
+  const x = db.users.find(v => v.id === uid);
+  if (!x) return;
+  x.role = 'senior';
+  notify(uid, 'An admin promoted you to senior directly', 'ok');
+  save();
+  toast(x.name + ' promoted to senior');
+  render();
+}
+
+function modal(html) {
   closeModal();
-  var o=document.createElement('div');
-  o.className='ov';o.id='ov';
-  o.innerHTML='<div class="modal fade">'+html+'</div>';
-  o.addEventListener('click',function(e){ if(e.target===o)closeModal(); });
-  document.body.appendChild(o);
-  document.body.style.overflow='hidden';
+  const ov = document.createElement('div');
+  ov.className = 'ov'; ov.id = 'ov';
+  ov.innerHTML = '<div class="modal">' + html + '</div>';
+  ov.addEventListener('click', function(e) { if (e.target === ov) closeModal(); });
+  document.body.appendChild(ov);
 }
-function closeModal(){
-  var o=$('#ov');
-  if(o)o.remove();
-  document.body.style.overflow='';
+function closeModal() {
+  const ov = document.getElementById('ov');
+  if (!ov) return;
+  ov.style.animation = 'ovin .15s reverse forwards';
+  const m = ov.firstElementChild;
+  if (m) m.style.animation = 'min .15s reverse forwards';
+  setTimeout(() => { ov.remove(); }, 150);
 }
-document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeModal(); });
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
 
-/* ---- boot ---- */
 render();
 </script>
 </body>
